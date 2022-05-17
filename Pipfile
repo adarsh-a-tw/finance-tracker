@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+sqlalchemy = "*"
+alembic = "*"
+
+[dev-packages]
+pylint = "*"
+pytest = "*"
+coverage = "*"
+sqlalchemy-stubs = "*"
+
+[requires]
+python_version = "3.7"
+
+[scripts]
+lint = "bash -c 'pylint src && pylint ./tests'"
+unit-test = "python -m coverage run -m pytest tests/unit"
