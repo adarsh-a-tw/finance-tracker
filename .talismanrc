@@ -1,4 +1,8 @@
 fileignoreconfig:
 - filename: Pipfile.lock
-  checksum: 02296693e76c6e94b43d47c8d7d166f9f9475c5eab29286508865e179109936e
-version: ""
+  checksum: 0976b29a87a9c9f0a8b3a89014920f21e1cc0bd353500f8d986d1af4890185b4
+- filename: src/users/domain/user.py
+  checksum: 03e884c5017c7a97c15ad3bb8b8b17397bce61ea125c6f247a91adc6f19bb1cc
+- filename: tests/domain/user_test.py
+  checksum: 28172799926f2a4749de30ea17b2cc72f9fdd93e6893c4d3eca513067b27e3f5
+version: "1.0"

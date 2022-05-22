@@ -23,7 +23,7 @@ def test_should_assert_that_ten_rupees_and_another_ten_rupees_are_equal():
     ten_rupees = Currency(10, CurrencyType.RUPEE)
     another_ten_rupees = Currency(10, CurrencyType.RUPEE)
 
-    assert ten_rupees.__eq__(another_ten_rupees)
+    assert ten_rupees == another_ten_rupees
 
 
 def test_should_not_compare_different_currencies():
@@ -34,13 +34,22 @@ def test_should_not_compare_different_currencies():
         ten_rupees.__eq__(ten_dollars)
 
 
-def test_should_convert_ten_dollars_to_rupees():
+def test_should_convert_ten_dollars_to_seventy_seven_rupees():
     ten_dollars = Currency(10, CurrencyType.DOLLAR)
 
     converted_rupees = ten_dollars.convert(CurrencyType.RUPEE, api=mock_coinbase_api)
 
     seven_hundred_seventy_rupees = Currency(770, CurrencyType.RUPEE)
     assert converted_rupees == seven_hundred_seventy_rupees
+
+
+def test_should_convert_seventy_seven_rupees_to_one_dollar():
+    seventy_seven_rupees = Currency(77, CurrencyType.RUPEE)
+
+    converted_dollar = seventy_seven_rupees.convert(CurrencyType.DOLLAR, api=mock_coinbase_api)
+
+    one_dollar = Currency(1, CurrencyType.DOLLAR)
+    assert converted_dollar == one_dollar
 
 
 def test_add_two_currencies():

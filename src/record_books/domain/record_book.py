@@ -11,7 +11,7 @@ from users.domain.user import User
 
 @dataclass
 class RecordBook:
-    record_id: uuid.UUID
+    record_book_id: uuid.UUID
     name: str
     user: User
     default_currency_type: CurrencyType = CurrencyType.RUPEE
@@ -25,7 +25,7 @@ class RecordBook:
                  _currency_conversion_api=fetch_data_from_coinbase):
         if _records is None:
             _records = {}
-        self.record_id = record_id
+        self.record_book_id = record_id
         self.name = name
         self.user = user
         self.default_currency_type = default_currency_type
