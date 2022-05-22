@@ -7,6 +7,7 @@ name = "pypi"
 flask = "*"
 sqlalchemy = "*"
 alembic = "*"
+requests = "*"
 
 [dev-packages]
 pylint = "*"
@@ -19,4 +20,5 @@ python_version = "3.7"
 
 [scripts]
 lint = "bash -c 'pylint src && pylint ./tests'"
-unit-test = "python -m coverage run -m pytest tests/unit"
+unit-test = "python -m coverage run -m pytest tests"
+coverage-report = "coverage report -m --fail-under=90"

@@ -1,0 +1,60 @@
+import uuid
+
+from mocks import mock_coinbase_api
+
+from currencies.domain.currency import Currency
+from currencies.domain.currency_type import CurrencyType
+from record_books.domain.record_book import RecordBook
+from records.domain.record import Record
+from records.domain.record_type import RecordType
+from users.domain.user import User
+
+
+def test_create_record_book_for_user():
+    user = User(uuid.uuid4(), "test_username", "user_email@domain.com")
+
+    record_book = RecordBook(uuid.uuid4(), "Test Book", user)
+
+    assert record_book.user is user
+
+
+def test_create_expense_in_record_book():
+    user = User(uuid.uuid4(), "test_username", "user_email@domain.com")
+    record_book = RecordBook(uuid.uuid4(), "Test Book", user)
+    note = "Test Expense"
+    amount = Currency(10, CurrencyType.RUPEE)
+
+    record_id = record_book.add(note, amount, RecordType.EXPENSE)
+
+    record: Record = record_book._records.get(record_id)  # pylint: disable=W0212
+    assert record.type == RecordType.EXPENSE
+    assert record.amount == amount
+    assert record.note == note
+
+
+def test_fetch_expense_in_record_book():
+    user = User(uuid.uuid4(), "test_username", "user_email@domain.com")
+    record_book = RecordBook(uuid.uuid4(), "Test Book", user)
+    note = "Test Expense"
+    amount = Currency(10, CurrencyType.RUPEE)
+    record_id = record_book.add(note, amount, RecordType.EXPENSE)
+
+    record: Record = record_book.get(record_id)
+
+    assert record.type == RecordType.EXPENSE
+    assert record.amount == amount
+    assert record.note == note
+
+
+def test_net_balance_of_record_book():
+    user = User(uuid.uuid4(), "test_username", "user_email@domain.com")
+    record_book = RecordBook(uuid.uuid4(), "Test Book", user,
+                             _currency_conversion_api=mock_coinbase_api)
+    ten_rupees = Currency(10, CurrencyType.RUPEE)
+    twenty_rupees = Currency(20, CurrencyType.RUPEE)
+    record_book.add("Test Income", twenty_rupees, RecordType.INCOME)
+    record_book.add("Test Expense", ten_rupees, RecordType.EXPENSE)
+
+    balance: Currency = record_book.net_balance()
+
+    assert balance == ten_rupees
