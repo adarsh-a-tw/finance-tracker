@@ -58,3 +58,19 @@ def test_net_balance_of_record_book():
     balance: Currency = record_book.net_balance()
 
     assert balance == ten_rupees
+
+
+def test_fetch_all_tags_of_records_in_record_book():
+    user = User(uuid.uuid4(), "test_username", "user_email@domain.com")
+    record_book = RecordBook(uuid.uuid4(), "Test Book", user,
+                             _currency_conversion_api=mock_coinbase_api)
+    ten_rupees = Currency(10, CurrencyType.RUPEE)
+    twenty_rupees = Currency(20, CurrencyType.RUPEE)
+    tag_list_1 = ["test_tag_1", "test_tag_2"]
+    tag_list_2 = ["test_tag_3", "test_tag_4", "test_tag_5"]
+    record_book.add("Test Income", twenty_rupees, RecordType.INCOME, tags=tag_list_1)
+    record_book.add("Test Expense", ten_rupees, RecordType.EXPENSE, tags=tag_list_2)
+
+    tags: set = record_book.tags()
+
+    assert tags == {*tag_list_1, *tag_list_2}
