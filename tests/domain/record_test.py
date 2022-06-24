@@ -2,42 +2,43 @@ import uuid
 
 import pytest
 
-from currencies.domain.currency import Currency
-from currencies.domain.currency_type import CurrencyType
 from records.domain.record import Record
 from records.domain.record_type import RecordType
 from records.exceptions import TagNotFoundException
 
 
 def test_create_income_record():
-    value = 10.00
-    currency = Currency(value, CurrencyType.RUPEE)
+    amount = 10.00
     note = "Sample Income"
     record_id = uuid.uuid4()
 
-    record = Record(record_id, note, currency, RecordType.INCOME)
+    record = Record(record_id, note, amount, RecordType.INCOME)
 
+    assert record.record_id == record_id
+    assert record.note == note
+    assert record.amount == amount
     assert record.type == RecordType.INCOME
 
 
 def test_create_expense_record():
-    value = 10.00
-    currency = Currency(value, CurrencyType.RUPEE)
+    amount = 10.00
     note = "Sample Expense"
     record_id = uuid.uuid4()
 
-    record = Record(record_id, note, currency, RecordType.EXPENSE)
+    record = Record(record_id, note, amount, RecordType.EXPENSE)
 
+    assert record.record_id == record_id
+    assert record.note == note
+    assert record.amount == amount
     assert record.type == RecordType.EXPENSE
 
 
 def test_create_record_with_tags():
-    value = 10.00
-    currency = Currency(value, CurrencyType.RUPEE)
+    amount = 10.00
     note = "Sample Expense"
     record_id = uuid.uuid4()
     tag_name = "test"
-    record = Record(record_id, note, currency, RecordType.EXPENSE)
+    record = Record(record_id, note, amount, RecordType.EXPENSE)
 
     record.tag(tag_name)
 
@@ -45,12 +46,11 @@ def test_create_record_with_tags():
 
 
 def test_untag_tag_from_record():
-    value = 10.00
-    currency = Currency(value, CurrencyType.RUPEE)
+    amount = 10.00
     note = "Sample Expense"
     record_id = uuid.uuid4()
     tag_name = "test"
-    record = Record(record_id, note, currency, RecordType.EXPENSE)
+    record = Record(record_id, note, amount, RecordType.EXPENSE)
     record.tag(tag_name)
 
     record.untag(tag_name)
@@ -59,13 +59,12 @@ def test_untag_tag_from_record():
 
 
 def test_create_record_with_multiple_tags_in_bulk():
-    value = 10.00
-    currency = Currency(value, CurrencyType.RUPEE)
+    amount = 10.00
     note = "Sample Expense"
     record_id = uuid.uuid4()
     tag_name_1 = "test1"
     tag_name_2 = "test2"
-    record = Record(record_id, note, currency, RecordType.EXPENSE)
+    record = Record(record_id, note, amount, RecordType.EXPENSE)
 
     record.tag([tag_name_1, tag_name_2], bulk=True)
 
@@ -74,12 +73,11 @@ def test_create_record_with_multiple_tags_in_bulk():
 
 
 def test_should_not_untag_non_existing_tag_from_record():
-    value = 10.00
-    currency = Currency(value, CurrencyType.RUPEE)
+    amount = 10.00
     note = "Sample Expense"
     record_id = uuid.uuid4()
     tag_name = "test"
-    record = Record(record_id, note, currency, RecordType.EXPENSE)
+    record = Record(record_id, note, amount, RecordType.EXPENSE)
 
     with pytest.raises(TagNotFoundException):
         record.untag(tag_name)

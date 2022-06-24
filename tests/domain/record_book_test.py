@@ -1,9 +1,5 @@
 import uuid
 
-from mocks import mock_coinbase_api
-
-from currencies.domain.currency import Currency
-from currencies.domain.currency_type import CurrencyType
 from record_books.domain.record_book import RecordBook
 from records.domain.record import Record
 from records.domain.record_type import RecordType
@@ -22,7 +18,7 @@ def test_create_expense_in_record_book():
     user = User(uuid.uuid4(), "test_username", "user_email@domain.com")
     record_book = RecordBook(uuid.uuid4(), "Test Book", user)
     note = "Test Expense"
-    amount = Currency(10, CurrencyType.RUPEE)
+    amount = 10
 
     record_id = record_book.add(note, amount, RecordType.EXPENSE)
 
@@ -30,13 +26,14 @@ def test_create_expense_in_record_book():
     assert record.type == RecordType.EXPENSE
     assert record.amount == amount
     assert record.note == note
+    assert record_book.net_balance() == -10
 
 
 def test_fetch_expense_in_record_book():
     user = User(uuid.uuid4(), "test_username", "user_email@domain.com")
     record_book = RecordBook(uuid.uuid4(), "Test Book", user)
     note = "Test Expense"
-    amount = Currency(10, CurrencyType.RUPEE)
+    amount = 10
     record_id = record_book.add(note, amount, RecordType.EXPENSE)
 
     record: Record = record_book.get(record_id)
@@ -48,24 +45,22 @@ def test_fetch_expense_in_record_book():
 
 def test_net_balance_of_record_book():
     user = User(uuid.uuid4(), "test_username", "user_email@domain.com")
-    record_book = RecordBook(uuid.uuid4(), "Test Book", user,
-                             _currency_conversion_api=mock_coinbase_api)
-    ten_rupees = Currency(10, CurrencyType.RUPEE)
-    twenty_rupees = Currency(20, CurrencyType.RUPEE)
+    record_book = RecordBook(uuid.uuid4(), "Test Book", user)
+    ten_rupees = 10
+    twenty_rupees = 20
     record_book.add("Test Income", twenty_rupees, RecordType.INCOME)
     record_book.add("Test Expense", ten_rupees, RecordType.EXPENSE)
 
-    balance: Currency = record_book.net_balance()
+    balance: float = record_book.net_balance()
 
     assert balance == ten_rupees
 
 
 def test_fetch_all_tags_of_records_in_record_book():
     user = User(uuid.uuid4(), "test_username", "user_email@domain.com")
-    record_book = RecordBook(uuid.uuid4(), "Test Book", user,
-                             _currency_conversion_api=mock_coinbase_api)
-    ten_rupees = Currency(10, CurrencyType.RUPEE)
-    twenty_rupees = Currency(20, CurrencyType.RUPEE)
+    record_book = RecordBook(uuid.uuid4(), "Test Book", user)
+    ten_rupees = 10
+    twenty_rupees = 20
     tag_list_1 = ["test_tag_1", "test_tag_2"]
     tag_list_2 = ["test_tag_3", "test_tag_4", "test_tag_5"]
     record_book.add("Test Income", twenty_rupees, RecordType.INCOME, tags=tag_list_1)

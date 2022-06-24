@@ -5,7 +5,6 @@ import uuid
 from dataclasses import dataclass, field
 from typing import Union, List
 
-from currencies.domain.currency import Currency
 from records.domain.record_type import RecordType
 from records.exceptions import TagNotFoundException
 
@@ -14,7 +13,7 @@ from records.exceptions import TagNotFoundException
 class Record:
     record_id: uuid.UUID
     note: str
-    amount: Currency
+    amount: float
     type: RecordType = RecordType.EXPENSE
     added_at: datetime = datetime.now()
     tags: set = field(default_factory=set)
