@@ -1,6 +1,6 @@
 import uuid
 
-from users.domain.user import User
+from src.users.domain.user import User
 
 
 def test_create_user():

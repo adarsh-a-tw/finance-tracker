@@ -5,8 +5,8 @@ import uuid
 from dataclasses import dataclass, field
 from typing import Union, List
 
-from records.domain.record_type import RecordType
-from records.exceptions import TagNotFoundException
+from src.records.domain.record_type import RecordType
+from src.records.exceptions import TagNotFoundException
 
 
 @dataclass

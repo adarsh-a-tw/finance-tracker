@@ -1,9 +1,9 @@
 import uuid
 
-from record_books.domain.record_book import RecordBook
-from records.domain.record import Record
-from records.domain.record_type import RecordType
-from users.domain.user import User
+from src.record_books.domain.record_book import RecordBook
+from src.records.domain.record import Record
+from src.records.domain.record_type import RecordType
+from src.users.domain.user import User
 
 
 def test_create_record_book_for_user():

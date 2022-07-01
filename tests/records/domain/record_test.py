@@ -2,9 +2,9 @@ import uuid
 
 import pytest
 
-from records.domain.record import Record
-from records.domain.record_type import RecordType
-from records.exceptions import TagNotFoundException
+from src.records.domain.record import Record
+from src.records.domain.record_type import RecordType
+from src.records.exceptions import TagNotFoundException
 
 
 def test_create_income_record():

@@ -1,8 +1,16 @@
 fileignoreconfig:
-- filename: Pipfile.lock
-  checksum: 0976b29a87a9c9f0a8b3a89014920f21e1cc0bd353500f8d986d1af4890185b4
 - filename: src/users/domain/user.py
   checksum: 03e884c5017c7a97c15ad3bb8b8b17397bce61ea125c6f247a91adc6f19bb1cc
 - filename: tests/domain/user_test.py
   checksum: 28172799926f2a4749de30ea17b2cc72f9fdd93e6893c4d3eca513067b27e3f5
+- filename: alembic/env.py
+  checksum: a4b24cf30ac7f2ab8c327389ceea43c9fd71b72f24a66b7144b4d48eb44e6064
+- filename: Pipfile.lock
+  checksum: 1e3de73a63afc8caf39b8518d912950841b42d3cf1b5a6fbfefc8166dfba7991
+- filename: alembic.ini
+  checksum: 34f06665bf826f9fac5c43021192b51b91e4687028285c9683e87a4b64ae9aea
+- filename: src/db/tables/users.py
+  checksum: 3aaea51ad7f5885da090c04425fe402731be64956154990e6ff74c4ba3e72b9c
+- filename: src/db/__init__.py
+  checksum: 412cf2faf82072a2806a8daaabfa5a9ca323350008f875ce82f600d689d721c0
 version: "1.0"

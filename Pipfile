@@ -7,6 +7,7 @@ name = "pypi"
 flask = "*"
 sqlalchemy = "*"
 alembic = "*"
+psycopg2-binary = "*"
 requests = "*"
 
 [dev-packages]
@@ -21,4 +22,5 @@ python_version = "3.7"
 [scripts]
 lint = "bash -c 'pylint src && pylint ./tests'"
 unit-test = "python -m coverage run -m pytest tests"
-coverage-report = "coverage report -m --fail-under=90 --omit=src/currencies/services/coinbase_service.py"
+coverage-report = "coverage report -m --fail-under=90"
+migrate = "alembic upgrade head"
