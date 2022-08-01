@@ -2,8 +2,6 @@ import hashlib
 import uuid
 from dataclasses import dataclass
 
-import tables
-
 
 @dataclass
 class User:  # pylint: disable=invalid-name

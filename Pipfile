@@ -8,6 +8,8 @@ sqlalchemy = "*"
 alembic = "*"
 psycopg2-binary = "*"
 python-dotenv = "*"
+fastapi = "*"
+uvicorn = { extras = ["standard"], version = "*" }
 
 [dev-packages]
 pylint = "*"
@@ -23,3 +25,4 @@ lint = "bash -c 'pylint src && pylint ./tests'"
 unit-test = "python -m coverage run -m pytest tests"
 coverage-report = "coverage report -m --fail-under=90 --omit=tests/*"
 migrate = "alembic upgrade head"
+start = "uvicorn src.main:app --reload"
