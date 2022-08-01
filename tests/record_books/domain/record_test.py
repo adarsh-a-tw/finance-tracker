@@ -2,9 +2,9 @@ import uuid
 
 import pytest
 
-from src.records.domain.record import Record
-from src.records.domain.record_type import RecordType
-from src.records.exceptions import TagNotFoundException
+from src.record_books.domain.record import Record
+from src.record_books.domain.record_type import RecordType
+from src.record_books.exceptions import TagNotFoundException
 
 
 def test_create_income_record():
@@ -14,7 +14,7 @@ def test_create_income_record():
 
     record = Record(record_id, note, amount, RecordType.INCOME)
 
-    assert record.record_id == record_id
+    assert record._id == record_id
     assert record.note == note
     assert record.amount == amount
     assert record.type == RecordType.INCOME
@@ -27,7 +27,7 @@ def test_create_expense_record():
 
     record = Record(record_id, note, amount, RecordType.EXPENSE)
 
-    assert record.record_id == record_id
+    assert record._id == record_id
     assert record.note == note
     assert record.amount == amount
     assert record.type == RecordType.EXPENSE

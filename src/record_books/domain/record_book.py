@@ -2,8 +2,8 @@ import uuid
 from dataclasses import dataclass, field
 from typing import List
 
-from src.records.domain.record import Record
-from src.records.domain.record_type import RecordType
+from src.record_books.domain.record import Record
+from src.record_books.domain.record_type import RecordType
 from src.users.domain.user import User
 
 
