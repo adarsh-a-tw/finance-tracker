@@ -4,11 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-flask = "*"
 sqlalchemy = "*"
 alembic = "*"
 psycopg2-binary = "*"
-requests = "*"
 python-dotenv = "*"
 
 [dev-packages]
@@ -23,5 +21,5 @@ python_version = "3.7"
 [scripts]
 lint = "bash -c 'pylint src && pylint ./tests'"
 unit-test = "python -m coverage run -m pytest tests"
-coverage-report = "coverage report -m --fail-under=90"
+coverage-report = "coverage report -m --fail-under=90 --omit=tests/*"
 migrate = "alembic upgrade head"

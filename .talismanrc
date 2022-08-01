@@ -1,20 +1,10 @@
 fileignoreconfig:
-- filename: src/users/domain/user.py
-  checksum: 03e884c5017c7a97c15ad3bb8b8b17397bce61ea125c6f247a91adc6f19bb1cc
-- filename: tests/domain/user_test.py
-  checksum: 28172799926f2a4749de30ea17b2cc72f9fdd93e6893c4d3eca513067b27e3f5
 - filename: alembic/env.py
-  checksum: 1cd5ccee70fc1a687cd3958cc03439e8e9589cc2f7710ff00f3e9136047ebc86
-- filename: alembic/versions/2022_08_01_1342-14c6562f198a_alter_column_password_length.py
-  checksum: b109f5cfadb844b9ba592fc6614efbfc5691992a642f7c55d442f80aee4eb90c
-- filename: src/tables.py
-  checksum: cf8f6a6a2a5a3197f9c29096b268f55d2c0157fd801e492ff420fd3a356ef04b
+  checksum: be99aa060caf59f83a28b8ff31810e8c75ef97b2a6b51637033204e57006c977
 - filename: Pipfile.lock
-  checksum: 1b9b289bd45d51ca4ed0e908a61b87ec41bf30793398649202bb2321689a4439
-- filename: alembic.ini
-  checksum: 34f06665bf826f9fac5c43021192b51b91e4687028285c9683e87a4b64ae9aea
-- filename: src/db/tables/users.py
-  checksum: 3aaea51ad7f5885da090c04425fe402731be64956154990e6ff74c4ba3e72b9c
-- filename: src/db/__init__.py
-  checksum: 412cf2faf82072a2806a8daaabfa5a9ca323350008f875ce82f600d689d721c0
+  checksum: d6e2e72efcf44f85e5b952cf07048ef0627b293842aa16dc8aeb58d4d8b97393
+- filename: src/tables.py
+  checksum: 0276471ddeb200b253e145afa70f83b42e7244d563dc0aeeff17512f501f287f
+- filename: tests/users/domain/user_test.py
+  checksum: fb5fac22c2b2305246e1e4e9e5f46905f1be2beb4d3becbfb57ba58e304869b0
 version: "1.0"
