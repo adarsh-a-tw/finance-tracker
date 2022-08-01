@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 @dataclass
 class User:
-    user_id: uuid.UUID
+    id: uuid.UUID
     username: str
     email: str
     _password: str = None

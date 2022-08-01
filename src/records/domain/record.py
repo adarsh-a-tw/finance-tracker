@@ -11,7 +11,7 @@ from src.records.exceptions import TagNotFoundException
 
 @dataclass
 class Record:
-    record_id: uuid.UUID
+    record: uuid.UUID
     note: str
     amount: float
     type: RecordType = RecordType.EXPENSE

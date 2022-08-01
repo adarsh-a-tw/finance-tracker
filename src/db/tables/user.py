@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
 
@@ -11,6 +11,7 @@ class User(Base):
     email = Column(String(70), nullable=False)
     password = Column(String(70))
     salt = Column(String(70))
+    record_books = relationship("RecordBook")
 
     def __repr__(self):
         return f"User(email={self.email})"

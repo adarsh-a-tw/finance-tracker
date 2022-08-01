@@ -4,9 +4,9 @@ fileignoreconfig:
 - filename: tests/domain/user_test.py
   checksum: 28172799926f2a4749de30ea17b2cc72f9fdd93e6893c4d3eca513067b27e3f5
 - filename: alembic/env.py
-  checksum: a4b24cf30ac7f2ab8c327389ceea43c9fd71b72f24a66b7144b4d48eb44e6064
+  checksum: c809c319d504fb4e507c941a69f4d0e40557d599c5014e3b3cbf4833ec5253a0
 - filename: Pipfile.lock
-  checksum: 1e3de73a63afc8caf39b8518d912950841b42d3cf1b5a6fbfefc8166dfba7991
+  checksum: 1b9b289bd45d51ca4ed0e908a61b87ec41bf30793398649202bb2321689a4439
 - filename: alembic.ini
   checksum: 34f06665bf826f9fac5c43021192b51b91e4687028285c9683e87a4b64ae9aea
 - filename: src/db/tables/users.py

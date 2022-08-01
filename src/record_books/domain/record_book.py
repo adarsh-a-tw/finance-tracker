@@ -9,7 +9,7 @@ from src.users.domain.user import User
 
 @dataclass
 class RecordBook:
-    record_book_id: uuid.UUID
+    id: uuid.UUID
     name: str
     user: User
     _records: dict = field(default_factory=dict)
