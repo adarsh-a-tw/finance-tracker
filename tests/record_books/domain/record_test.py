@@ -14,7 +14,7 @@ def test_create_income_record():
 
     record = Record(record_id, note, amount, RecordType.INCOME)
 
-    assert record._id == record_id
+    assert record.id == record_id
     assert record.note == note
     assert record.amount == amount
     assert record.type == RecordType.INCOME
@@ -27,7 +27,7 @@ def test_create_expense_record():
 
     record = Record(record_id, note, amount, RecordType.EXPENSE)
 
-    assert record._id == record_id
+    assert record.id == record_id
     assert record.note == note
     assert record.amount == amount
     assert record.type == RecordType.EXPENSE

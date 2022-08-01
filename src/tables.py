@@ -21,7 +21,7 @@ record_tag_mapping = Table(
 )
 
 
-class RecordBook(Base):
+class RecordBook(Base):  # pylint: disable=too-few-public-methods
     __tablename__ = 'record_book'
     id = Column(String(50), primary_key=True)
     name = Column(String(50), nullable=False)
@@ -35,7 +35,7 @@ class RecordBook(Base):
         return f"RecordBook(name={self.name},user_id={self.user.email})"
 
 
-class Record(Base):
+class Record(Base):  # pylint: disable=too-few-public-methods
     __tablename__ = 'record'
     id = Column(String(50), primary_key=True)
     note = Column(Text(), nullable=False)
@@ -50,13 +50,13 @@ class Record(Base):
         return f"Record(note={self.note},record_book={self.record_book.name})"
 
 
-class Tag(Base):
+class Tag(Base):  # pylint: disable=too-few-public-methods
     __tablename__ = 'tag'
     id = Column(String(50), primary_key=True)
     value = Column(String(70), nullable=False)
 
 
-class User(Base):
+class User(Base):  # pylint: disable=too-few-public-methods
     __tablename__ = 'user'
     id = Column(String(50), primary_key=True)
     username = Column(String(50), nullable=False)

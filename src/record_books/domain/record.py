@@ -10,8 +10,8 @@ from src.record_books.exceptions import TagNotFoundException
 
 
 @dataclass
-class Record:
-    _id: uuid.UUID
+class Record:  # pylint: disable=invalid-name
+    id: uuid.UUID
     note: str
     amount: float
     type: RecordType = RecordType.EXPENSE

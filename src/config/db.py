@@ -1,8 +1,9 @@
 import os
 
 from sqlalchemy import create_engine
-from dotenv import load_dotenv
 from sqlalchemy.orm import declarative_base
+
+from dotenv import load_dotenv
 
 
 class DB:

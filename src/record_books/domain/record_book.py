@@ -8,7 +8,7 @@ from src.users.domain.user import User
 
 
 @dataclass
-class RecordBook:
+class RecordBook:  # pylint: disable=invalid-name
     id: uuid.UUID
     name: str
     user: User

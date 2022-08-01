@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class User:
+class User:  # pylint: disable=invalid-name
     id: uuid.UUID
     username: str
     email: str
