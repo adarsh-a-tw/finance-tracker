@@ -10,7 +10,7 @@ from src.model.user import User
 def test_create_user():
     username = "test_username"
     email = "test_email@domain.com"
-    user_id = uuid.uuid4()
+    user_id = str(uuid.uuid4())
 
     user = User(user_id, username, email)
 
@@ -59,7 +59,7 @@ def test_should_map_domain_user_to_data_model():
     username = "test_username"
     email = "test_email@domain.com"
     password = "test123"
-    user_id = uuid.uuid4()
+    user_id = str(uuid.uuid4())
     domain_user = User(user_id, username, email)
     domain_user.set_password(password)
 
@@ -77,7 +77,7 @@ def test_should_create_domain_user_from_data_model():
     email = "test_email@domain.com"
     password = "sample_password"
     salt = "sample_salt"
-    user_id = uuid.uuid4()
+    user_id = str(uuid.uuid4())
     data_user: tables.User = tables.User(id=user_id, username=username, email=email, password=password, salt=salt)
 
     domain_user: User = User.from_data_model(data_user)
@@ -94,7 +94,7 @@ def test_should_save_user_to_db():
     username = "test_username"
     email = "test_email@domain.com"
     password = "test123"
-    user_id = uuid.uuid4()
+    user_id = str(uuid.uuid4())
     domain_user = User(user_id, username, email)
     domain_user.set_password(password)
     data_user: tables.User = tables.User(id=user_id, username=username, email=email,
@@ -113,7 +113,7 @@ def test_should_fetch_user_from_db_given_username():
     username = "test_username"
     email = "test_email@domain.com"
     password = "test123"
-    user_id = uuid.uuid4()
+    user_id = str(uuid.uuid4())
     domain_user = User(user_id, username, email)
     domain_user.set_password(password)
     data_user: tables.User = tables.User(id=user_id, username=username, email=email,

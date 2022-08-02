@@ -9,7 +9,7 @@ import tables
 
 @dataclass
 class User:  # pylint: disable=invalid-name
-    id: uuid.UUID
+    id: str
     username: str
     email: str
     _password: str = None

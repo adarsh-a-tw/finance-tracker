@@ -1,7 +1,7 @@
 import os
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import declarative_base, sessionmaker
 
 from dotenv import load_dotenv
 
@@ -26,3 +26,7 @@ class DB:
     @staticmethod
     def get_base():
         return DB._base
+
+    @staticmethod
+    def get_session():
+        return sessionmaker(DB.get_engine())

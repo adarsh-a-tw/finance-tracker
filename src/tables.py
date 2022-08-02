@@ -59,8 +59,8 @@ class Tag(Base):  # pylint: disable=too-few-public-methods
 class User(Base):  # pylint: disable=too-few-public-methods
     __tablename__ = 'user'
     id = Column(String(50), primary_key=True)
-    username = Column(String(50), nullable=False)
-    email = Column(String(70), nullable=False)
+    username = Column(String(50), nullable=False, unique=True)
+    email = Column(String(70), nullable=False, unique=True)
     password = Column(String(128), nullable=False)
     salt = Column(String(100), nullable=False)
     record_books = relationship("RecordBook", back_populates="user")

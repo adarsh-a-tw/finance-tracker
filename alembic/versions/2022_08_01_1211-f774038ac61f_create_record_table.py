@@ -11,7 +11,7 @@ import sqlalchemy as sa
 # revision identifiers, used by Alembic.
 from sqlalchemy import ForeignKey
 
-from model import RecordType
+from src.model.record_type import RecordType
 
 revision = 'f774038ac61f'
 down_revision = 'ef38953e34b6'
