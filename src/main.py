@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request
 
-from application.decorators import login_required
+from decorators import login_required
 
 app = FastAPI()
 

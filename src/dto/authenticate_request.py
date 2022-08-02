@@ -1,0 +1,2 @@
+class AuthenticateRequest:
+    pass

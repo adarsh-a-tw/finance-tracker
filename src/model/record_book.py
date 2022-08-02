@@ -2,9 +2,9 @@ import uuid
 from dataclasses import dataclass, field
 from typing import List
 
-from src.record_books.domain.record import Record
-from src.record_books.domain.record_type import RecordType
-from src.users.domain.user import User
+from src.model.record import Record
+from src.model.record_type import RecordType
+from src.model.user import User
 
 
 @dataclass

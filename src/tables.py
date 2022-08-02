@@ -2,7 +2,7 @@ from sqlalchemy import Column, String, ForeignKey, Text, Float, Table, DateTime
 from sqlalchemy.orm import relationship
 
 from config.db import DB
-from record_books.domain.record_type import RecordType
+from src.model.record_type import RecordType
 
 Base = DB.get_base()
 
@@ -67,3 +67,9 @@ class User(Base):  # pylint: disable=too-few-public-methods
 
     def __repr__(self):
         return f"User(email={self.email})"
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.id == other.id and self.username == other.username and \
+                   self.email == other.email and self.password == other.password and self.salt == other.salt
+        return False
