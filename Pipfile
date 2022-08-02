@@ -11,6 +11,7 @@ python-dotenv = "*"
 fastapi = "*"
 uvicorn = { extras = ["standard"], version = "*" }
 pyjwt = "*"
+requests = "*"
 
 [dev-packages]
 pylint = "*"
@@ -24,6 +25,6 @@ python_version = "3.7"
 [scripts]
 lint = "bash -c 'pylint src && pylint ./tests'"
 unit-test = "python -m coverage run -m pytest tests"
-coverage-report = "coverage report -m --fail-under=90 --omit=tests/*"
+coverage-report = "coverage report -m --fail-under=90 --omit=tests/*,src/config/db.py"
 migrate = "alembic upgrade head"
 start = "uvicorn src.main:app --reload"

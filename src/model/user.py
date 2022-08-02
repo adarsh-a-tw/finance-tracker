@@ -2,8 +2,6 @@ import hashlib
 import uuid
 from dataclasses import dataclass
 
-from sqlalchemy.orm import Session
-
 import tables
 
 
@@ -42,6 +40,3 @@ class User:  # pylint: disable=invalid-name
             _password=data_user.password,
             _salt=data_user.salt
         )
-
-    def save(self, session: Session):
-        session.add(self.data_model())

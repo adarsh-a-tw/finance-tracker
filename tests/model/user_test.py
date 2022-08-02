@@ -1,8 +1,6 @@
 import uuid
 from unittest.mock import patch, MagicMock, call
 
-from sqlalchemy.orm import Session
-
 import tables
 from src.model.user import User
 
@@ -22,7 +20,8 @@ def test_create_user():
 @patch('uuid.uuid4')
 def test_should_set_password(mocked_uuid, mocked_hash_method):
     mocked_uuid.return_value = MagicMock(spec=uuid.UUID)
-    sample_uuid = uuid.uuid4()
+    sample_uuid = str(uuid.uuid4())
+    salt_uuid = uuid.uuid4()
 
     username = "test_username"
     email = "test_email@domain.com"
@@ -32,14 +31,15 @@ def test_should_set_password(mocked_uuid, mocked_hash_method):
 
     user.set_password(password)
 
-    assert mocked_hash_method.called_once_with((password + sample_uuid.hex).encode('UTF-8'))
+    assert mocked_hash_method.called_once_with((password + salt_uuid.hex).encode('UTF-8'))
 
 
 @patch('hashlib.sha512')
 @patch('uuid.uuid4')
 def test_should_check_password(mocked_uuid, mocked_hash_method):
     mocked_uuid.return_value = MagicMock(spec=uuid.UUID)
-    sample_uuid = uuid.uuid4()
+    sample_uuid = str(uuid.uuid4())
+    salt_uuid = uuid.uuid4()
     hashed_password = MagicMock()
     mocked_hash_method.return_value = hashed_password
     username = "test_username"
@@ -47,7 +47,7 @@ def test_should_check_password(mocked_uuid, mocked_hash_method):
     user_id = sample_uuid
     user = User(user_id, username, email)
     password = "test123"
-    sample_uuid_hex__encode = (password + sample_uuid.hex).encode('UTF-8')
+    sample_uuid_hex__encode = (password + salt_uuid.hex).encode('UTF-8')
     user.set_password(password)
 
     assert user.check_password(password) is True
@@ -55,24 +55,24 @@ def test_should_check_password(mocked_uuid, mocked_hash_method):
     assert [call(sample_uuid_hex__encode), call(sample_uuid_hex__encode)] == mocked_hash_method.call_args_list
 
 
-def test_should_map_domain_user_to_data_model():
+def test_should_map_model_user_to_data_model():
     username = "test_username"
     email = "test_email@domain.com"
     password = "test123"
     user_id = str(uuid.uuid4())
-    domain_user = User(user_id, username, email)
-    domain_user.set_password(password)
+    model_user = User(user_id, username, email)
+    model_user.set_password(password)
 
-    data_user: tables.User = domain_user.data_model()
+    data_user: tables.User = model_user.data_model()
 
-    assert data_user.id == domain_user.id
-    assert data_user.username == domain_user.username
-    assert data_user.email == domain_user.email
-    assert data_user.password == domain_user._password
-    assert data_user.salt == domain_user._salt
+    assert data_user.id == model_user.id
+    assert data_user.username == model_user.username
+    assert data_user.email == model_user.email
+    assert data_user.password == model_user._password
+    assert data_user.salt == model_user._salt
 
 
-def test_should_create_domain_user_from_data_model():
+def test_should_create_model_user_from_data_model():
     username = "test_username"
     email = "test_email@domain.com"
     password = "sample_password"
@@ -80,48 +80,10 @@ def test_should_create_domain_user_from_data_model():
     user_id = str(uuid.uuid4())
     data_user: tables.User = tables.User(id=user_id, username=username, email=email, password=password, salt=salt)
 
-    domain_user: User = User.from_data_model(data_user)
+    model_user: User = User.from_data_model(data_user)
 
-    assert data_user.id == domain_user.id
-    assert data_user.username == domain_user.username
-    assert data_user.email == domain_user.email
-    assert data_user.password == domain_user._password
-    assert data_user.salt == domain_user._salt
-
-
-def test_should_save_user_to_db():
-    mocked_session_class = MagicMock(spec=Session)
-    username = "test_username"
-    email = "test_email@domain.com"
-    password = "test123"
-    user_id = str(uuid.uuid4())
-    domain_user = User(user_id, username, email)
-    domain_user.set_password(password)
-    data_user: tables.User = tables.User(id=user_id, username=username, email=email,
-                                         password=domain_user._password,
-                                         salt=domain_user._salt)
-
-    with mocked_session_class(MagicMock()) as session:
-        domain_user.save(session)
-        session.commit()
-        session.add.assert_called_once()
-        assert session.add.call_args[0][0] == data_user
-
-
-def test_should_fetch_user_from_db_given_username():
-    mocked_session_class = MagicMock(spec=Session)
-    username = "test_username"
-    email = "test_email@domain.com"
-    password = "test123"
-    user_id = str(uuid.uuid4())
-    domain_user = User(user_id, username, email)
-    domain_user.set_password(password)
-    data_user: tables.User = tables.User(id=user_id, username=username, email=email,
-                                         password=domain_user._password,
-                                         salt=domain_user._salt)
-
-    with mocked_session_class(MagicMock()) as session:
-        domain_user.save(session)
-        session.commit()
-        session.add.assert_called_once()
-        assert session.add.call_args[0][0] == data_user
+    assert data_user.id == model_user.id
+    assert data_user.username == model_user.username
+    assert data_user.email == model_user.email
+    assert data_user.password == model_user._password
+    assert data_user.salt == model_user._salt

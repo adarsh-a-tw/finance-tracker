@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 
 class DB:
     _engine = None
+    _test_engine = None
     _base = declarative_base()
 
     @staticmethod
@@ -30,3 +31,15 @@ class DB:
     @staticmethod
     def get_session():
         return sessionmaker(DB.get_engine())
+
+    @staticmethod
+    def get_test_session():
+        return sessionmaker(DB.get_test_engine())
+
+    @staticmethod
+    def get_test_engine():
+        if not DB._test_engine:
+            DB._test_engine = create_engine(
+                "sqlite:///./test.db", connect_args={"check_same_thread": False}
+            )
+        return DB._test_engine

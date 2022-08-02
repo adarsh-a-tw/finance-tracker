@@ -71,5 +71,6 @@ class User(Base):  # pylint: disable=too-few-public-methods
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self.id == other.id and self.username == other.username and \
-                   self.email == other.email and self.password == other.password and self.salt == other.salt
+                   self.email == other.email and self.password == other.password \
+                   and self.salt == other.salt
         return False
