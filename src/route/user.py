@@ -1,11 +1,10 @@
-from fastapi import APIRouter, Depends, Body, HTTPException
-from sqlalchemy.orm import Session
-from starlette.requests import Request
-from starlette.responses import JSONResponse
+from typing import Union
 
+from fastapi import APIRouter, Depends, Header
+from sqlalchemy.orm import Session
+
+from dependencies import get_session, verify_auth
 from dto.authenticate_request import AuthenticateRequest
-from dependencies import get_session
-from src.exceptions import InvalidCredentialsException
 from src.service.user import UserService
 
 router = APIRouter()
@@ -20,5 +19,9 @@ def authenticate(request_body: AuthenticateRequest, session_class: Session = Dep
 
     return {
         "token": token
-        }
+    }
 
+
+@router.get("/me")
+def get_user_info(user_info: dict = Depends(verify_auth)):
+    return user_info

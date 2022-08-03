@@ -14,6 +14,8 @@ app.dependency_overrides[get_session] = mock_get_session
 
 client = TestClient(app)
 
+user_id = str(uuid.uuid4())
+
 
 class TestUserRouter(unittest.TestCase):
 
@@ -28,7 +30,7 @@ class TestUserRouter(unittest.TestCase):
 
     def setUp(self) -> None:
         with self.get_session().begin() as session:
-            user = User(id=str(uuid.uuid4()), username="test_user", email="test_user@domain.com")
+            user = User(id=user_id, username = "test_user", email = "test_user@domain.com")
             user.set_password("test_password")
             user_service = UserService(session)
             user_service.save_user(user)
@@ -46,3 +48,13 @@ class TestUserRouter(unittest.TestCase):
         response = client.post("/users/authenticate",
                                json={"username": "test_invalid_user", "password": "test_password"})
         assert response.status_code == 401
+
+    def test_get_user_information(self):
+        auth_response = client.post("/users/authenticate", json={"username": "test_user", "password": "test_password"})
+        auth_token = auth_response.json()['token']
+        response = client.get("/users/me", headers={'x-api-token': auth_token})
+        assert response.status_code == 200
+        data = response.json()
+        assert data['username'] == "test_user"
+        assert data['email'] == "test_user@domain.com"
+        assert data['id'] == user_id
