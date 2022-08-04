@@ -26,7 +26,7 @@ class RecordBook:  # pylint: disable=invalid-name
         self._tags = set()
 
     def add(self, note: str, amount: float, record_type: RecordType, tags=None):
-        record_id = uuid.uuid4()
+        record_id = str(uuid.uuid4())
         record = Record(record_id, note, amount, record_type)
         if tags:
             record.tag(tags, bulk=True)
@@ -61,7 +61,13 @@ class RecordBook:  # pylint: disable=invalid-name
         )
 
     @classmethod
-    def from_data_model(cls, data_record_book: tables.RecordBook) -> 'RecordBook':
+    def from_data_model(cls, data_record_book: tables.RecordBook, with_records=False) -> 'RecordBook':
+        if with_records:
+            record_book = cls(id=data_record_book.id, name=data_record_book.name,
+                              user=User.from_data_model(data_record_book.user))
+            for data_record in data_record_book.records:
+                record_book._records[data_record.id] = Record.from_data_model(data_record)
+            return record_book
         return cls(
             id=data_record_book.id,
             name=data_record_book.name,

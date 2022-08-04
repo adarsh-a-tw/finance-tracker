@@ -9,7 +9,7 @@ USER_ID = str(uuid.uuid4())
 
 
 @pytest.fixture(autouse=True)
-def setup(get_test_session):
+def setup_default_user(get_test_session):
     with get_test_session.begin() as session:
         user = User(id=USER_ID, username="test_user", email="test_user@domain.com")
         user.set_password("test_password")

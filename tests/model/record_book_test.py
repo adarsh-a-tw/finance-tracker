@@ -1,3 +1,4 @@
+import datetime
 import uuid
 
 import tables
@@ -101,3 +102,30 @@ def test_should_create_model_record_book_from_data_model():
     assert model_record_book.id == data_record_book.id
     assert model_record_book.user == model_user
     assert model_record_book.name == data_record_book.name
+
+
+def test_should_create_model_record_book_from_data_model_with_records():
+    username = "test_username"
+    email = "test_email@domain.com"
+    user_id = str(uuid.uuid4())
+    record_book_id = str(uuid.uuid4())
+    data_user: tables.User = tables.User(id=user_id, username=username, email=email)
+    amount = 10.00
+    note = "Sample Expense"
+    record_id = str(uuid.uuid4())
+    added_at = datetime.datetime.now()
+    data_record = tables.Record(id=record_id, note=note, amount=amount, type=RecordType.EXPENSE.value,
+                                record_book_id=str(uuid.uuid4()), added_at=added_at)
+    data_record_book: tables.RecordBook = tables.RecordBook(id=record_book_id, name="Test Book", user=data_user,
+                                                            records=[data_record])
+    model_user: User = User(user_id, username, email)
+
+    model_record: Record = Record(id=record_id, note=note, amount=amount, type=RecordType.EXPENSE,
+                                  added_at=added_at)
+
+    model_record_book: RecordBook = RecordBook.from_data_model(data_record_book, with_records=True)
+
+    assert model_record_book.id == data_record_book.id
+    assert model_record_book.user == model_user
+    assert model_record_book.name == data_record_book.name
+    assert model_record == model_record_book._records.get(record_id)
