@@ -33,10 +33,6 @@ class DB:
         return sessionmaker(DB.get_engine())
 
     @staticmethod
-    def get_test_session():
-        return sessionmaker(DB.get_test_engine())
-
-    @staticmethod
     def get_test_engine():
         if not DB._test_engine:
             DB._test_engine = create_engine(

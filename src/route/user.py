@@ -1,6 +1,4 @@
-from typing import Union
-
-from fastapi import APIRouter, Depends, Header
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from dependencies import get_session, verify_auth

@@ -3,10 +3,12 @@ from fastapi.responses import JSONResponse
 
 from src.exceptions import InvalidCredentialsException, InvalidAuthTokenException
 from src.route.user import router as user_router
+from src.route.record_book import router as record_book_router
 
 app = FastAPI()
 
 app.include_router(router=user_router, prefix='/users')
+app.include_router(router=record_book_router, prefix='/record_books')
 
 
 @app.exception_handler(InvalidCredentialsException)

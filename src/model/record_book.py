@@ -2,6 +2,7 @@ import uuid
 from dataclasses import dataclass, field
 from typing import List
 
+import tables
 from src.model.record import Record
 from src.model.record_type import RecordType
 from src.model.user import User
@@ -9,15 +10,15 @@ from src.model.user import User
 
 @dataclass
 class RecordBook:  # pylint: disable=invalid-name
-    id: uuid.UUID
+    id: str
     name: str
     user: User
     _records: dict = field(default_factory=dict)
     _net_balance: float = 0
     _tags: set = field(default_factory=set)
 
-    def __init__(self, record_id, name, user, _net_balance=0):
-        self.record_book_id = record_id
+    def __init__(self, id, name, user, _net_balance=0):  # pylint: disable=redefined-builtin
+        self.id: str = id
         self.name = name
         self.user = user
         self._records = {}
@@ -51,3 +52,18 @@ class RecordBook:  # pylint: disable=invalid-name
 
     def _update_tags(self, tags: List):
         self._tags = self._tags.union(set(tags))
+
+    def data_model(self) -> tables.RecordBook:
+        return tables.RecordBook(
+            id=self.id,
+            name=self.name,
+            user_id=self.user.id
+        )
+
+    @classmethod
+    def from_data_model(cls, data_record_book: tables.RecordBook) -> 'RecordBook':
+        return cls(
+            id=data_record_book.id,
+            name=data_record_book.name,
+            user=User.from_data_model(data_record_book.user)
+        )

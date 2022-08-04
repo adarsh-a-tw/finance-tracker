@@ -1,5 +1,6 @@
 import uuid
 
+import tables
 from src.model.record_book import RecordBook
 from src.model.record import Record
 from src.model.record_type import RecordType
@@ -7,16 +8,16 @@ from src.model.user import User
 
 
 def test_create_record_book_for_user():
-    user = User(uuid.uuid4(), "test_username", "user_email@domain.com")
+    user = User(str(uuid.uuid4()), "test_username", "user_email@domain.com")
 
-    record_book = RecordBook(uuid.uuid4(), "Test Book", user)
+    record_book = RecordBook(str(uuid.uuid4()), "Test Book", user)
 
     assert record_book.user is user
 
 
 def test_create_expense_in_record_book():
-    user = User(uuid.uuid4(), "test_username", "user_email@domain.com")
-    record_book = RecordBook(uuid.uuid4(), "Test Book", user)
+    user = User(str(uuid.uuid4()), "test_username", "user_email@domain.com")
+    record_book = RecordBook(str(uuid.uuid4()), "Test Book", user)
     note = "Test Expense"
     amount = 10
 
@@ -30,8 +31,8 @@ def test_create_expense_in_record_book():
 
 
 def test_fetch_expense_in_record_book():
-    user = User(uuid.uuid4(), "test_username", "user_email@domain.com")
-    record_book = RecordBook(uuid.uuid4(), "Test Book", user)
+    user = User(str(uuid.uuid4()), "test_username", "user_email@domain.com")
+    record_book = RecordBook(str(uuid.uuid4()), "Test Book", user)
     note = "Test Expense"
     amount = 10
     record_id = record_book.add(note, amount, RecordType.EXPENSE)
@@ -44,8 +45,8 @@ def test_fetch_expense_in_record_book():
 
 
 def test_net_balance_of_record_book():
-    user = User(uuid.uuid4(), "test_username", "user_email@domain.com")
-    record_book = RecordBook(uuid.uuid4(), "Test Book", user)
+    user = User(str(uuid.uuid4()), "test_username", "user_email@domain.com")
+    record_book = RecordBook(str(uuid.uuid4()), "Test Book", user)
     ten_rupees = 10
     twenty_rupees = 20
     record_book.add("Test Income", twenty_rupees, RecordType.INCOME)
@@ -57,8 +58,8 @@ def test_net_balance_of_record_book():
 
 
 def test_fetch_all_tags_of_records_in_record_book():
-    user = User(uuid.uuid4(), "test_username", "user_email@domain.com")
-    record_book = RecordBook(uuid.uuid4(), "Test Book", user)
+    user = User(str(uuid.uuid4()), "test_username", "user_email@domain.com")
+    record_book = RecordBook(str(uuid.uuid4()), "Test Book", user)
     ten_rupees = 10
     twenty_rupees = 20
     tag_list_1 = ["test_tag_1", "test_tag_2"]
@@ -69,3 +70,34 @@ def test_fetch_all_tags_of_records_in_record_book():
     tags: set = record_book.tags()
 
     assert tags == {*tag_list_1, *tag_list_2}
+
+
+def test_should_map_model_record_book_to_data_model():
+    username = "test_username"
+    email = "test_email@domain.com"
+    user_id = str(uuid.uuid4())
+    record_book_id = str(uuid.uuid4())
+    model_user = User(user_id, username, email)
+    model_record_book = RecordBook(id=record_book_id, name="Test Book", user=model_user)
+
+    data_record_book: tables.RecordBook = model_record_book.data_model()
+
+    assert data_record_book.id == model_record_book.id
+    assert data_record_book.name == model_record_book.name
+    assert data_record_book.user_id == model_user.id
+
+
+def test_should_create_model_record_book_from_data_model():
+    username = "test_username"
+    email = "test_email@domain.com"
+    user_id = str(uuid.uuid4())
+    record_book_id = str(uuid.uuid4())
+    data_user: tables.User = tables.User(id=user_id, username=username, email=email)
+    data_record_book: tables.RecordBook = tables.RecordBook(id=record_book_id, name="Test Book", user=data_user)
+    model_user: User = User(user_id, username, email)
+
+    model_record_book: RecordBook = RecordBook.from_data_model(data_record_book)
+
+    assert model_record_book.id == data_record_book.id
+    assert model_record_book.user == model_user
+    assert model_record_book.name == data_record_book.name

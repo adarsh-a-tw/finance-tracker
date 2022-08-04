@@ -12,6 +12,7 @@ fastapi = "*"
 uvicorn = { extras = ["standard"], version = "*" }
 pyjwt = "*"
 requests = "*"
+pydantic = "*"
 
 [dev-packages]
 pylint = "*"

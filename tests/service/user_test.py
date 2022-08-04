@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from sqlalchemy.orm import Session
 
-import tables
+from mocks.user import mock_model_user, mock_data_user
 from src.exceptions import InvalidCredentialsException
 from src.model.user import User
 from src.repository.user import UserRepository
@@ -90,27 +90,3 @@ def test_should_save_user(mocked_user_repository):
         service.save_user(user)
 
     mocked_user_repository_instance.save.assert_called_once_with(mock_data_user())
-
-
-def mock_data_user():
-    user_id: str = "mock_uuid"
-    username: str = "test_username"
-    password: str = "test_password"
-    email: str = "test_email"
-    salt: str = "test_salt"
-
-    return tables.User(id=user_id, username=username,
-                       password=password,
-                       email=email, salt=salt)
-
-
-def mock_model_user():
-    user_id: str = "mock_uuid"
-    username: str = "test_username"
-    password: str = "test_password"
-    email: str = "test_email"
-    salt: str = "test_salt"
-
-    return User(id=user_id, username=username,
-                _password=password,
-                email=email, _salt=salt)

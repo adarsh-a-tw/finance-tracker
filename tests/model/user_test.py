@@ -68,8 +68,8 @@ def test_should_map_model_user_to_data_model():
     assert data_user.id == model_user.id
     assert data_user.username == model_user.username
     assert data_user.email == model_user.email
-    assert data_user.password == model_user._password
-    assert data_user.salt == model_user._salt
+    assert data_user.password == model_user._password  # pylint: disable=protected-access
+    assert data_user.salt == model_user._salt  # pylint: disable=protected-access
 
 
 def test_should_create_model_user_from_data_model():
@@ -85,5 +85,5 @@ def test_should_create_model_user_from_data_model():
     assert data_user.id == model_user.id
     assert data_user.username == model_user.username
     assert data_user.email == model_user.email
-    assert data_user.password == model_user._password
-    assert data_user.salt == model_user._salt
+    assert data_user.password == model_user._password  # pylint: disable=protected-access
+    assert data_user.salt == model_user._salt  # pylint: disable=protected-access
