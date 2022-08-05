@@ -1,4 +1,5 @@
 import uuid
+from typing import List
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -163,3 +164,30 @@ def test_should_raise_user_not_found_exception_given_invalid_user(mocked_record_
         with pytest.raises(UserNotFoundException):
             record_book_service.fetch_record_book(record_book_id, username)
         mocked_user_service_instance.fetch_user.assert_called_with(username)
+
+
+@patch('src.service.record_book.UserService')
+@patch('src.service.record_book.RecordBookRepository')
+def test_should_fetch_record_books_given_username(mocked_record_book_repository, mocked_user_service):
+    username = "test_username"
+    mocked_session_class = MagicMock(spec=Session)
+    mocked_engine = MagicMock()
+
+    mocked_user_service_instance = MagicMock(spec=UserRepository)
+    mocked_user_service_instance.fetch_user.return_value = mock_model_user()
+    mocked_user_service.return_value = mocked_user_service_instance
+
+    mocked_record_book_repository_instance = MagicMock(spec=RecordBookRepository)
+    mocked_record_book_repository_instance.fetch_record_books.return_value = [MagicMock(spec=tables.RecordBook),
+                                                                              MagicMock(spec=tables.RecordBook)]
+    mocked_record_book_repository.return_value = mocked_record_book_repository_instance
+
+    with mocked_session_class(mocked_engine) as session:
+        record_book_service = RecordBookService(session)
+        record_books: List[ModelRecordBook] = record_book_service.fetch_record_books(username)
+        mocked_user_service_instance.fetch_user.assert_called_with(username)
+        mocked_record_book_repository_instance.fetch_record_books.assert_called_once_with(mock_model_user().id)
+
+    assert isinstance(record_books, List)
+    assert len(record_books) == 2
+    assert isinstance(record_books[0], ModelRecordBook)

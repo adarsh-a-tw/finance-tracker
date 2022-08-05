@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, Body
 from fastapi.params import Path
 from sqlalchemy.orm import Session
@@ -6,6 +8,7 @@ from dependencies import verify_auth, get_session
 from dto.create_record_book_response import CreateRecordBookResponse
 from dto.create_record_request import CreateRecordRequest
 from dto.create_record_response import CreateRecordResponse
+from dto.record_book_list_view_response import RecordBookListViewResponse
 from src.model.record_book import RecordBook as ModelRecordBook
 from src.service.record_book import RecordBookService
 
@@ -35,3 +38,19 @@ def create_record(
                                                    note=body.note, amount=body.amount, record_type=body.type,
                                                    tags=body.tags)
     return record
+
+
+@router.get("", response_model=List[RecordBookListViewResponse], status_code=200)
+def fetch_record_books(
+        session_class: Session = Depends(get_session),
+        user_info: dict = Depends(verify_auth)
+):
+    with session_class.begin() as session:
+        record_book_service = RecordBookService(session)
+        record_books: List[ModelRecordBook] = record_book_service.fetch_record_books(username=user_info['username'])
+    return list(map(lambda rb: RecordBookListViewResponse(
+        id=rb.id,
+        name=rb.name,
+        net_balance=rb.net_balance(),
+        tags=rb.tags()
+    ), record_books))

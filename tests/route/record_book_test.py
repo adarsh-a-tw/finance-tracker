@@ -57,3 +57,13 @@ def test_should_create_record(client, default_record_book):
     assert data['amount'] == 10.0
     assert data['type'] == 'EXPENSE'
     assert data['tags'] == ['test_tag']
+
+
+def test_should_fetch_record_books_for_user(client, default_record_book):
+    response = client.get("/record_books", headers={'x-api-token': get_auth_token(client)})
+
+    data = response.json()
+    assert response.status_code == 200
+    assert len(data) == 1
+    assert data[0]["name"] == "test_record_book"
+    assert data[0]["id"] == default_record_book.id

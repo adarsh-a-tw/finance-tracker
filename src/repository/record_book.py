@@ -25,3 +25,8 @@ class RecordBookRepository:  # pylint: disable=too-few-public-methods
         data_record_book.net_balance = new_balance
         data_record_book.tag_map = data_tags
         return data_record_book
+
+    def fetch_record_books(self, user_id):
+        statement = select(RecordBook).filter_by(user_id=user_id)
+        data_record_books = self._session.scalars(statement=statement).all()
+        return data_record_books

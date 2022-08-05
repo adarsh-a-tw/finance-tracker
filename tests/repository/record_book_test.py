@@ -47,3 +47,17 @@ def test_should_update_record_book_balance():
                                                                      table_record_book.tag_map)
         session.scalars().one_or_none.assert_called_once()
         assert updated_record_book.net_balance == new_balance
+
+
+def test_should_fetch_record_books():
+    table_record_books = [mock_data_record_book()]
+    user_id = str(uuid.uuid4())
+    mocked_session_class = MagicMock(spec=Session)
+    mocked_engine = MagicMock()
+
+    with mocked_session_class(mocked_engine) as session:
+        session.scalars().all.return_value = table_record_books
+        repository: RecordBookRepository = RecordBookRepository(db_session=session)
+        record_books = repository.fetch_record_books(user_id)
+        session.scalars().all.assert_called_once()
+        assert record_books == table_record_books
