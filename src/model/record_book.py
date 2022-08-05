@@ -57,7 +57,8 @@ class RecordBook:  # pylint: disable=invalid-name
         return tables.RecordBook(
             id=self.id,
             name=self.name,
-            user_id=self.user.id
+            user_id=self.user.id,
+            net_balance=self.net_balance()
         )
 
     @classmethod
@@ -66,7 +67,9 @@ class RecordBook:  # pylint: disable=invalid-name
             record_book = cls(id=data_record_book.id, name=data_record_book.name,
                               user=User.from_data_model(data_record_book.user))
             for data_record in data_record_book.records:
-                record_book._records[data_record.id] = Record.from_data_model(data_record)
+                model_record = Record.from_data_model(data_record)
+                record_book._records[data_record.id] = model_record
+                record_book._update_balance(model_record)
             return record_book
         return cls(
             id=data_record_book.id,

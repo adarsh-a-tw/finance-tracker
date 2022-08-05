@@ -31,7 +31,7 @@ def setup_user(get_test_session):
 def default_record_book(get_test_session):
     with get_test_session.begin() as session:
         record_book_service = RecordBookService(session)
-        yield record_book_service.create_record_book("test_record_book", USERNAME)
+        return record_book_service.create_record_book("test_record_book", USERNAME)
 
 
 def test_should_create_record_book(client):

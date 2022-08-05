@@ -1,3 +1,4 @@
+import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
@@ -19,3 +20,7 @@ def invalid_credentials_exception_handler(request: Request, ex: InvalidCredentia
 @app.exception_handler(InvalidAuthTokenException)
 def invalid_auth_token_exception_handler(request: Request, ex: InvalidAuthTokenException):  # pylint: disable=W0613
     return JSONResponse(status_code=403, content={"message": str(ex)})
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
