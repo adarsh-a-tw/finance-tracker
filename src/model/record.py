@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-from datetime import datetime
-import uuid
 from dataclasses import dataclass, field
+from datetime import datetime
 from typing import Union, List, Set
 
 import tables
-from src.model.record_type import RecordType
 from src.exceptions import TagNotFoundException
+from src.model.record_type import RecordType
 
 
 @dataclass
@@ -38,7 +37,7 @@ class Record:  # pylint: disable=invalid-name
                    amount=data_record.amount,
                    type=RecordType(data_record.type),
                    added_at=data_record.added_at,
-                   tags=set([tag_mapping.tag for tag_mapping in data_record.tag_map]))
+                   tags={tag_mapping.tag for tag_mapping in data_record.tag_map})
 
     def data_model(self, record_book_id: str) -> tables.Record:
         record = tables.Record(id=self.id, record_book_id=record_book_id, amount=self.amount, note=self.note,

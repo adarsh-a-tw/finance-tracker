@@ -128,7 +128,7 @@ def test_should_create_model_record_book_from_data_model_with_records():
     assert model_record_book.id == data_record_book.id
     assert model_record_book.user == model_user
     assert model_record_book.name == data_record_book.name
-    assert model_record == model_record_book._records.get(record_id)
+    assert model_record == model_record_book._records.get(record_id)  # pylint: disable=protected-access
 
 
 def test_should_map_model_record_book_to_data_model_with_tags():
@@ -138,7 +138,7 @@ def test_should_map_model_record_book_to_data_model_with_tags():
     record_book_id = str(uuid.uuid4())
     model_user = User(user_id, username, email)
     model_record_book = RecordBook(id=record_book_id, name="Test Book", user=model_user)
-    model_record_book._update_tags(['1', '2'])
+    model_record_book._update_tags(['1', '2'])  # pylint: disable=protected-access
 
     data_record_book: tables.RecordBook = model_record_book.data_model()
 

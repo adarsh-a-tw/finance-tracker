@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, ForeignKey, Text, Float, Table, DateTime
+from sqlalchemy import Column, String, ForeignKey, Text, Float, DateTime
 from sqlalchemy.orm import relationship
 
 from config.db import DB
@@ -7,13 +7,13 @@ from src.model.record_type import RecordType
 Base = DB.get_base()
 
 
-class RecordBookTagMapping(Base):
+class RecordBookTagMapping(Base): # pylint: disable=too-few-public-methods
     __tablename__ = 'record_book_tag_mapping'
     record_book_id = Column(String(50), ForeignKey("record_book.id"), primary_key=True)
     tag = Column(String(70), primary_key=True)
 
 
-class RecordTagMapping(Base):
+class RecordTagMapping(Base): # pylint: disable=too-few-public-methods
     __tablename__ = 'record_tag_mapping'
     record_id = Column(String(50), ForeignKey("record.id"), primary_key=True)
     tag = Column(String(70), primary_key=True)
