@@ -1,8 +1,10 @@
+from typing import List
+
 from sqlalchemy import select
 
 from sqlalchemy.orm import Session
 
-from tables import RecordBook
+from tables import RecordBook, RecordBookTagMapping
 
 
 class RecordBookRepository:  # pylint: disable=too-few-public-methods
@@ -17,8 +19,9 @@ class RecordBookRepository:  # pylint: disable=too-few-public-methods
         data_record_book = self._session.scalars(statement=statement).one_or_none()
         return data_record_book
 
-    def update_net_balance(self, record_book_id, new_balance):
+    def update_net_balance_and_tags(self, record_book_id, new_balance, data_tags: List[RecordBookTagMapping]):
         statement = select(RecordBook).filter_by(id=record_book_id)
         data_record_book = self._session.scalars(statement=statement).one_or_none()
         data_record_book.net_balance = new_balance
+        data_record_book.tag_map = data_tags
         return data_record_book

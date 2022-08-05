@@ -54,22 +54,23 @@ class RecordBook:  # pylint: disable=invalid-name
         self._tags = self._tags.union(set(tags))
 
     def data_model(self) -> tables.RecordBook:
-        return tables.RecordBook(
-            id=self.id,
-            name=self.name,
-            user_id=self.user.id,
-            net_balance=self.net_balance()
-        )
+        data_record_book = tables.RecordBook(id=self.id, name=self.name, user_id=self.user.id,
+                                             net_balance=self.net_balance())
+        for tag in self._tags:
+            data_record_book.tag_map.append(tables.RecordBookTagMapping(record_book_id=data_record_book.id, tag=tag))
+        return data_record_book
 
     @classmethod
     def from_data_model(cls, data_record_book: tables.RecordBook, with_records=False) -> 'RecordBook':
         if with_records:
             record_book = cls(id=data_record_book.id, name=data_record_book.name,
                               user=User.from_data_model(data_record_book.user))
+            record_book._update_tags([tag_mapping.tag for tag_mapping in data_record_book.tag_map])
             for data_record in data_record_book.records:
                 model_record = Record.from_data_model(data_record)
                 record_book._records[data_record.id] = model_record
                 record_book._update_balance(model_record)
+                record_book._update_tags(list(model_record.tags))
             return record_book
         return cls(
             id=data_record_book.id,

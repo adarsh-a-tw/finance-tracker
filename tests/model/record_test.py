@@ -93,7 +93,7 @@ def test_should_map_model_record_to_data_model():
     assert data_record.type == RecordType.EXPENSE.value
 
 
-def test_should_create_model_record_book_from_data_model():
+def test_should_create_model_record_from_data_model():
     amount = 10.00
     note = "Sample Expense"
     data_record = tables.Record(id=record_id, note=note, amount=amount, type=RecordType.EXPENSE.value,
@@ -105,3 +105,36 @@ def test_should_create_model_record_book_from_data_model():
     assert data_record.note == model_record.note
     assert data_record.amount == model_record.amount
     assert model_record.type == RecordType.EXPENSE
+
+
+def test_should_map_model_record_to_data_model_with_tags():
+    amount = 10.00
+    note = "Sample Expense"
+    model_record = Record(record_id, note, amount, RecordType.EXPENSE, tags={'test_tag'})
+
+    data_record: tables.Record = model_record.data_model(str(uuid.uuid4()))
+
+    tags = [row.tag for row in data_record.tag_map]
+
+    assert data_record.id == model_record.id
+    assert data_record.note == model_record.note
+    assert data_record.amount == model_record.amount
+    assert data_record.type == RecordType.EXPENSE.value
+    assert set(tags) == model_record.tags
+
+
+def test_should_create_model_record_from_data_model_with_tags():
+    amount = 10.00
+    note = "Sample Expense"
+    data_tags = [tables.RecordTagMapping(record_id=record_id, tag=str(i)) for i in range(10)]
+    data_record = tables.Record(id=record_id, note=note, amount=amount, type=RecordType.EXPENSE.value,
+                                record_book_id=str(uuid.uuid4()), tag_map=data_tags)
+
+    model_record: Record = Record.from_data_model(data_record)
+
+    tags = [row.tag for row in data_record.tag_map]
+    assert data_record.id == model_record.id
+    assert data_record.note == model_record.note
+    assert data_record.amount == model_record.amount
+    assert model_record.type == RecordType.EXPENSE
+    assert model_record.tags == set(tags)

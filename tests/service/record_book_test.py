@@ -73,7 +73,7 @@ def test_should_create_record_given_record_book_id_and_username(mocked_record_re
         mocked_record_book_repository_instance.fetch_record_book.assert_called_with(record_book_id,
                                                                                     mock_model_user().id)
         mocked_record_repository_instance.save.assert_called_once()
-        mocked_record_book_repository_instance.update_net_balance(record_book_id, -20.92)
+        mocked_record_book_repository_instance.update_net_balance_and_tags.assert_called_once()
 
     assert isinstance(record, ModelRecord)
 

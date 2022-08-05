@@ -32,7 +32,8 @@ class RecordBookService:  # pylint: disable=too-few-public-methods
         record_id = record_book.add(note, amount, record_type, tags)
         model_record: ModelRecord = record_book.get(record_id)
         self.record_repository.save(model_record.data_model(record_book.id))
-        self.repository.update_net_balance(record_book_id, record_book.net_balance())
+        self.repository.update_net_balance_and_tags(record_book_id, record_book.net_balance(),
+                                                    record_book.data_model().tag_map)
         return model_record
 
     def fetch_record_book(self, record_book_id: str, username: str) -> Union[ModelRecordBook, None]:

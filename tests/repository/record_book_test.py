@@ -43,6 +43,7 @@ def test_should_update_record_book_balance():
     with mocked_session_class(mocked_engine) as session:
         session.scalars().one_or_none.return_value = table_record_book
         repository: RecordBookRepository = RecordBookRepository(db_session=session)
-        updated_record_book = repository.update_net_balance(record_book_id, new_balance)
+        updated_record_book = repository.update_net_balance_and_tags(record_book_id, new_balance,
+                                                                     table_record_book.tag_map)
         session.scalars().one_or_none.assert_called_once()
         assert updated_record_book.net_balance == new_balance

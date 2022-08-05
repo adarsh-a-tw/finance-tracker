@@ -33,9 +33,17 @@ class Record:  # pylint: disable=invalid-name
 
     @classmethod
     def from_data_model(cls, data_record: tables.Record) -> 'Record':
-        return cls(id=data_record.id, note=data_record.note, amount=data_record.amount,
-                   type=RecordType(data_record.type), added_at=data_record.added_at)
+        return cls(id=data_record.id,
+                   note=data_record.note,
+                   amount=data_record.amount,
+                   type=RecordType(data_record.type),
+                   added_at=data_record.added_at,
+                   tags=set([tag_mapping.tag for tag_mapping in data_record.tag_map]))
 
     def data_model(self, record_book_id: str) -> tables.Record:
-        return tables.Record(id=self.id, record_book_id=record_book_id, amount=self.amount, note=self.note,
-                             type=self.type.value, added_at=self.added_at)
+        record = tables.Record(id=self.id, record_book_id=record_book_id, amount=self.amount, note=self.note,
+                               type=self.type.value, added_at=self.added_at)
+        for tag in self.tags:
+            tag_mapping = tables.RecordTagMapping(record_id=record.id, tag=tag)
+            record.tag_map.append(tag_mapping)
+        return record
