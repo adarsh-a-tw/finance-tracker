@@ -3,7 +3,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from src.exceptions import InvalidCredentialsException, InvalidAuthTokenException, PasswordsDontMatchException, \
-    EmailInvalidException, EmailAlreadyExistsException, UsernameAlreadyExistsException
+    EmailInvalidException, EmailAlreadyExistsException, UsernameAlreadyExistsException, RecordBookNotFoundException
 from src.route.record_book import router as record_book_router
 from src.route.user import router as user_router
 
@@ -42,6 +42,12 @@ def email_already_exists_exception_handler(request: Request, ex: EmailAlreadyExi
 def username_already_exists_exception_handler(request: Request,  # pylint: disable=W0613
                                               ex: UsernameAlreadyExistsException):
     return JSONResponse(status_code=400, content={"message": str(ex)})
+
+
+@app.exception_handler(RecordBookNotFoundException)
+def record_book_not_found_exception_handler(request: Request,  # pylint: disable=W0613
+                                                  ex: RecordBookNotFoundException):
+    return JSONResponse(status_code=404, content={"message": str(ex)})
 
 
 if __name__ == "__main__":

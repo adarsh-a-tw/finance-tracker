@@ -1,3 +1,4 @@
+import datetime
 import uuid
 from dataclasses import dataclass, field
 from typing import List, Dict
@@ -27,7 +28,7 @@ class RecordBook:  # pylint: disable=invalid-name
 
     def add(self, note: str, amount: float, record_type: RecordType, tags=None):
         record_id = str(uuid.uuid4())
-        record = Record(record_id, note, amount, record_type)
+        record = Record(record_id, note, amount, datetime.datetime.now(), record_type)
         if tags:
             record.tag(tags, bulk=True)
             self._update_tags(tags)
@@ -39,7 +40,7 @@ class RecordBook:  # pylint: disable=invalid-name
         return self._records.get(record_id)
 
     def records(self) -> List[Record]:
-        return list(self._records.values())
+        return sorted(self._records.values(), key=lambda record: record.added_at, reverse=True)
 
     def net_balance(self):
         return self._net_balance

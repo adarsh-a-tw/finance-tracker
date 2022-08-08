@@ -1,3 +1,4 @@
+import datetime
 import uuid
 
 import pytest
@@ -8,13 +9,13 @@ from src.model.record_type import RecordType
 from src.exceptions import TagNotFoundException
 
 RECORD_ID = str(uuid.uuid4())
-
+DUMMY_DATETIME = datetime.datetime.now()
 
 def test_create_income_record():
     amount = 10.00
     note = "Sample Income"
 
-    record = Record(RECORD_ID, note, amount, RecordType.INCOME)
+    record = Record(RECORD_ID, note, amount, DUMMY_DATETIME, RecordType.INCOME)
 
     assert record.id == RECORD_ID
     assert record.note == note
@@ -26,7 +27,7 @@ def test_create_expense_record():
     amount = 10.00
     note = "Sample Expense"
 
-    record = Record(RECORD_ID, note, amount, RecordType.EXPENSE)
+    record = Record(RECORD_ID, note, amount, DUMMY_DATETIME,RecordType.EXPENSE)
 
     assert record.id == RECORD_ID
     assert record.note == note
@@ -38,7 +39,7 @@ def test_create_record_with_tags():
     amount = 10.00
     note = "Sample Expense"
     tag_name = "test"
-    record = Record(RECORD_ID, note, amount, RecordType.EXPENSE)
+    record = Record(RECORD_ID, note, amount, DUMMY_DATETIME,RecordType.EXPENSE)
 
     record.tag(tag_name)
 
@@ -49,7 +50,7 @@ def test_untag_tag_from_record():
     amount = 10.00
     note = "Sample Expense"
     tag_name = "test"
-    record = Record(RECORD_ID, note, amount, RecordType.EXPENSE)
+    record = Record(RECORD_ID, note, amount, DUMMY_DATETIME,RecordType.EXPENSE)
     record.tag(tag_name)
 
     record.untag(tag_name)
@@ -62,7 +63,7 @@ def test_create_record_with_multiple_tags_in_bulk():
     note = "Sample Expense"
     tag_name_1 = "test1"
     tag_name_2 = "test2"
-    record = Record(RECORD_ID, note, amount, RecordType.EXPENSE)
+    record = Record(RECORD_ID, note, amount, DUMMY_DATETIME,RecordType.EXPENSE)
 
     record.tag([tag_name_1, tag_name_2], bulk=True)
 
@@ -74,7 +75,7 @@ def test_should_not_untag_non_existing_tag_from_record():
     amount = 10.00
     note = "Sample Expense"
     tag_name = "test"
-    record = Record(RECORD_ID, note, amount, RecordType.EXPENSE)
+    record = Record(RECORD_ID, note, amount, DUMMY_DATETIME,RecordType.EXPENSE)
 
     with pytest.raises(TagNotFoundException):
         record.untag(tag_name)
@@ -83,7 +84,7 @@ def test_should_not_untag_non_existing_tag_from_record():
 def test_should_map_model_record_to_data_model():
     amount = 10.00
     note = "Sample Expense"
-    model_record = Record(RECORD_ID, note, amount, RecordType.EXPENSE)
+    model_record = Record(RECORD_ID, note, amount,DUMMY_DATETIME, RecordType.EXPENSE)
 
     data_record: tables.Record = model_record.data_model(str(uuid.uuid4()))
 
@@ -110,7 +111,7 @@ def test_should_create_model_record_from_data_model():
 def test_should_map_model_record_to_data_model_with_tags():
     amount = 10.00
     note = "Sample Expense"
-    model_record = Record(RECORD_ID, note, amount, RecordType.EXPENSE, tags={'test_tag'})
+    model_record = Record(RECORD_ID, note, amount,DUMMY_DATETIME, RecordType.EXPENSE, tags={'test_tag'})
 
     data_record: tables.Record = model_record.data_model(str(uuid.uuid4()))
 

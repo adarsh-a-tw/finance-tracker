@@ -14,8 +14,8 @@ class Record:  # pylint: disable=invalid-name
     id: str
     note: str
     amount: float
+    added_at: datetime
     type: RecordType = RecordType.EXPENSE
-    added_at: datetime = datetime.now()
     tags: Set[str] = field(default_factory=set)
 
     def tag(self, tag_name: Union[str | List[str]], bulk=False):

@@ -1,7 +1,7 @@
 import uuid
 from typing import List
 
-from exceptions import UserNotFoundException, RecordBookNotFoundException
+from src.exceptions import UserNotFoundException, RecordBookNotFoundException
 from src.model.record import Record as ModelRecord
 from src.model.record_book import RecordBook as ModelRecordBook
 from src.model.record_type import RecordType

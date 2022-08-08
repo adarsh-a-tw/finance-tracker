@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from mocks.record_book import mock_model_record_book, mock_data_record_book
 from mocks.user import mock_model_user
-from exceptions import UserNotFoundException, RecordBookNotFoundException
+from src.exceptions import UserNotFoundException, RecordBookNotFoundException
 from src.repository.record import RecordRepository
 from src.model.record_type import RecordType
 from src.model.record_book import RecordBook as ModelRecordBook
