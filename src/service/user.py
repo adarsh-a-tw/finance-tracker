@@ -1,12 +1,13 @@
+import uuid
 from datetime import timedelta, datetime
 from typing import Optional
 
 import jwt
 
 from config.secrets import get_secret
-from src.exceptions import InvalidCredentialsException
-from src.repository.user import UserRepository
+from src.exceptions import InvalidCredentialsException, UsernameAlreadyExistsException, EmailAlreadyExistsException
 from src.model.user import User as ModelUser
+from src.repository.user import UserRepository
 
 
 class UserService:
@@ -31,3 +32,15 @@ class UserService:
     def save_user(self, user: ModelUser):
         data_user = user.data_model()
         self.repository.save(data_user)
+
+    def create_user(self, username, email, password):
+        if self.repository.fetch_user(username):
+            raise UsernameAlreadyExistsException
+
+        if self.repository.fetch_user_by_email(email):
+            raise EmailAlreadyExistsException
+
+        model_user = ModelUser(id=str(uuid.uuid4()), username=username, email=email)
+        model_user.set_password(password)
+
+        self.save_user(model_user)

@@ -1,14 +1,14 @@
 import uuid
-from typing import List, Union
+from typing import List
 
 from exceptions import UserNotFoundException, RecordBookNotFoundException
-from src.repository.record import RecordRepository
-from src.model.record_type import RecordType
-from src.service.user import UserService
-from src.model.record_book import RecordBook as ModelRecordBook
 from src.model.record import Record as ModelRecord
+from src.model.record_book import RecordBook as ModelRecordBook
+from src.model.record_type import RecordType
 from src.model.user import User as ModelUser
+from src.repository.record import RecordRepository
 from src.repository.record_book import RecordBookRepository
+from src.service.user import UserService
 
 
 class RecordBookService:  # pylint: disable=too-few-public-methods

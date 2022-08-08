@@ -4,7 +4,7 @@ import pytest
 from sqlalchemy.orm import Session
 
 from mocks.user import mock_model_user, mock_data_user
-from src.exceptions import InvalidCredentialsException
+from src.exceptions import InvalidCredentialsException, UsernameAlreadyExistsException, EmailAlreadyExistsException
 from src.model.user import User
 from src.repository.user import UserRepository
 from src.service.user import UserService
@@ -90,3 +90,59 @@ def test_should_save_user(mocked_user_repository):
         service.save_user(user)
 
     mocked_user_repository_instance.save.assert_called_once_with(mock_data_user())
+
+
+@patch('src.service.user.UserRepository')
+def test_should_create_user_when_given_email_username_and_password(mocked_user_repository):
+    mocked_session_class = MagicMock(spec=Session)
+    mocked_engine = MagicMock()
+
+    mocked_user_repository_instance = MagicMock(spec=UserRepository)
+    mocked_user_repository.return_value = mocked_user_repository_instance
+
+    mocked_user_repository_instance.fetch_user.return_value = None
+    mocked_user_repository_instance.fetch_user_by_email.return_value = None
+
+    with mocked_session_class(mocked_engine) as session:
+        service: UserService = UserService(session)
+        service.create_user("test_username", "test_email", "test_password")
+
+    mocked_user_repository_instance.fetch_user.assert_called_once_with("test_username")
+    mocked_user_repository_instance.fetch_user_by_email.assert_called_once_with("test_email")
+    mocked_user_repository_instance.save.assert_called_once()
+
+
+@patch('src.service.user.UserRepository')
+def test_should_raise_exception_when_create_user_given_existing_username(mocked_user_repository):
+    mocked_session_class = MagicMock(spec=Session)
+    mocked_engine = MagicMock()
+
+    mocked_user_repository_instance = MagicMock(spec=UserRepository)
+    mocked_user_repository.return_value = mocked_user_repository_instance
+
+    mocked_user_repository_instance.fetch_user.return_value = mock_data_user()
+    mocked_user_repository_instance.fetch_user_by_email.return_value = None
+
+    with mocked_session_class(mocked_engine) as session:
+        service: UserService = UserService(session)
+
+        with pytest.raises(UsernameAlreadyExistsException):
+            service.create_user("test_username", "test_email", "test_password")
+
+
+@patch('src.service.user.UserRepository')
+def test_should_raise_exception_when_create_user_given_existing_email(mocked_user_repository):
+    mocked_session_class = MagicMock(spec=Session)
+    mocked_engine = MagicMock()
+
+    mocked_user_repository_instance = MagicMock(spec=UserRepository)
+    mocked_user_repository.return_value = mocked_user_repository_instance
+
+    mocked_user_repository_instance.fetch_user.return_value = None
+    mocked_user_repository_instance.fetch_user_by_email.return_value = mock_data_user()
+
+    with mocked_session_class(mocked_engine) as session:
+        service: UserService = UserService(session)
+
+        with pytest.raises(EmailAlreadyExistsException):
+            service.create_user("test_username", "test_email", "test_password")

@@ -21,3 +21,23 @@ class UserNotFoundException(Exception):
 class RecordBookNotFoundException(Exception):
     def __init__(self):
         super().__init__("RecordBook not found in database.")
+
+
+class PasswordsDontMatchException(Exception):
+    def __init__(self):
+        super().__init__("Passwords dont match.")
+
+
+class EmailInvalidException(Exception):
+    def __init__(self):
+        super().__init__("Email is invalid.")
+
+
+class UsernameAlreadyExistsException(Exception):
+    def __init__(self):
+        super().__init__("Username already exists.")
+
+
+class EmailAlreadyExistsException(Exception):
+    def __init__(self):
+        super().__init__("Email already exists.")

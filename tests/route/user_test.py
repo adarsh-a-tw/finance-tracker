@@ -38,3 +38,42 @@ def test_get_user_information(client):
     assert data['username'] == "test_user"
     assert data['email'] == "test_user@domain.com"
     assert data['id'] == USER_ID
+
+
+def test_user_signup(client):
+    user_information = {"username": "new_user", "password": "new_password", "confirm_password": "new_password",
+                        "email": "new_email@domain.com"}
+    response = client.post("/users/signup", json=user_information)
+    assert response.status_code == 201
+
+
+def test_user_signup_failure_when_username_not_unique(client):
+    user_information = {"username": "test_user", "password": "new_password", "confirm_password": "new_password",
+                        "email": "new_email@domain.com"}
+    response = client.post("/users/signup", json=user_information)
+    assert response.status_code == 400
+    assert response.json()['message'] == 'Username already exists.'
+
+
+def test_user_signup_failure_when_email_not_unique(client):
+    user_information = {"username": "new_user", "password": "new_password", "confirm_password": "new_password",
+                        "email": "test_user@domain.com"}
+    response = client.post("/users/signup", json=user_information)
+    assert response.status_code == 400
+    assert response.json()['message'] == 'Email already exists.'
+
+
+def test_user_signup_failure_when_email_not_valid(client):
+    user_information = {"username": "new_user", "password": "new_password", "confirm_password": "new_password",
+                        "email": "test_user"}
+    response = client.post("/users/signup", json=user_information)
+    assert response.status_code == 400
+    assert response.json()['message'] == 'Email is invalid.'
+
+
+def test_user_signup_failure_when_passwords_dont_match(client):
+    user_information = {"username": "new_user", "password": "new_password", "confirm_password": "new_password2",
+                        "email": "new_user@domain.com"}
+    response = client.post("/users/signup", json=user_information)
+    assert response.status_code == 400
+    assert response.json()['message'] == 'Passwords dont match.'

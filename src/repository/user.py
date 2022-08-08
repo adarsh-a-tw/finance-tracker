@@ -14,5 +14,9 @@ class UserRepository:
         statement = select(User).filter_by(username=username)
         return self._session.scalars(statement=statement).one_or_none()
 
-    def save(self, user: 'User'):
+    def save(self, user: User):
         self._session.add(user)
+
+    def fetch_user_by_email(self, email):
+        statement = select(User).filter_by(email=email)
+        return self._session.scalars(statement=statement).one_or_none()
