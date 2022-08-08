@@ -31,8 +31,6 @@ class RecordBookService:  # pylint: disable=too-few-public-methods
                       record_type: RecordType,
                       tags: List[str]):
         record_book = self.fetch_record_book(record_book_id, username)
-        if not record_book:
-            raise RecordBookNotFoundException
         record_id = record_book.add(note, amount, record_type, tags)
         model_record: ModelRecord = record_book.get(record_id)
         self.record_repository.save(model_record.data_model(record_book.id))
@@ -40,14 +38,14 @@ class RecordBookService:  # pylint: disable=too-few-public-methods
                                                     record_book.data_model().tag_map)
         return model_record
 
-    def fetch_record_book(self, record_book_id: str, username: str) -> Union[ModelRecordBook, None]:
+    def fetch_record_book(self, record_book_id: str, username: str) -> ModelRecordBook:
         user: ModelUser = self.user_service.fetch_user(username)
         if not user:
             raise UserNotFoundException
         data_record_book = self.repository.fetch_record_book(record_book_id, user.id)
         if data_record_book:
             return ModelRecordBook.from_data_model(data_record_book, with_records=True)
-        return None
+        raise RecordBookNotFoundException
 
     def fetch_record_books(self, username):
         user: ModelUser = self.user_service.fetch_user(username)

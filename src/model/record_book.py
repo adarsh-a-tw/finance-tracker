@@ -1,6 +1,6 @@
 import uuid
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Dict
 
 import tables
 from src.model.record import Record
@@ -21,7 +21,7 @@ class RecordBook:  # pylint: disable=invalid-name
         self.id: str = id
         self.name = name
         self.user = user
-        self._records = {}
+        self._records: Dict[str, Record] = {}
         self._net_balance = _net_balance
         self._tags = set()
 
@@ -37,6 +37,9 @@ class RecordBook:  # pylint: disable=invalid-name
 
     def get(self, record_id):
         return self._records.get(record_id)
+
+    def records(self) -> List[Record]:
+        return list(self._records.values())
 
     def net_balance(self):
         return self._net_balance

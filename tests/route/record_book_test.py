@@ -3,6 +3,7 @@ import uuid
 
 import pytest
 
+from src.model.record_type import RecordType
 from src.service.record_book import RecordBookService
 from src.model.user import User
 from src.service.user import UserService
@@ -32,7 +33,11 @@ def setup_user(get_test_session):
 def default_record_book(get_test_session):
     with get_test_session.begin() as session:
         record_book_service = RecordBookService(session)
-        return record_book_service.create_record_book("test_record_book", USERNAME)
+        record_book = record_book_service.create_record_book("test_record_book", USERNAME)
+        record_book_service.create_record(username=user.username, record_book_id=record_book.id,
+                                          note="Test Expense", amount=10, record_type=RecordType.EXPENSE,
+                                          tags=['test'])
+        return record_book
 
 
 def test_should_create_record_book(client):
@@ -67,3 +72,15 @@ def test_should_fetch_record_books_for_user(client, default_record_book):
     assert len(data) == 1
     assert data[0]["name"] == "test_record_book"
     assert data[0]["id"] == default_record_book.id
+    assert data[0]["tags"] == ['test']
+
+
+def test_should_fetch_record_book_with_records_for_user_given_user_id(client, default_record_book):
+    response = client.get(f"/record_books/{default_record_book.id}", headers={'x-api-token': get_auth_token(client)})
+
+    data = response.json()
+    assert response.status_code == 200
+    assert data["name"] == "test_record_book"
+    assert data["id"] == default_record_book.id
+    assert data["tags"] == ['test']
+    assert len(data["records"]) == 1

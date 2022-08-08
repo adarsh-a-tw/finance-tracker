@@ -1,9 +1,10 @@
 import datetime
 import uuid
+from typing import List
 
 import tables
-from src.model.record_book import RecordBook
 from src.model.record import Record
+from src.model.record_book import RecordBook
 from src.model.record_type import RecordType
 from src.model.user import User
 
@@ -171,3 +172,18 @@ def test_should_create_model_record_book_from_data_model_with_tags():
     assert model_record_book.user == model_user
     assert model_record_book.name == data_record_book.name
     assert set(tags) == model_record_book.tags()
+
+
+def test_fetch_records_from_record_book():
+    user = User(str(uuid.uuid4()), "test_username", "user_email@domain.com")
+    record_book = RecordBook(str(uuid.uuid4()), "Test Book", user)
+    note = "Test Expense"
+    amount = 10
+    record_book.add(note, amount, RecordType.EXPENSE)
+    record_book.add(note, amount, RecordType.EXPENSE)
+    record_book.add(note, amount, RecordType.EXPENSE)
+
+    records: List[Record] = record_book.records()
+
+    assert len(records) == 3
+    assert records[0].note == note

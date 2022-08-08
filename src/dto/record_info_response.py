@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from src.model.record_type import RecordType
 
 
-class CreateRecordResponse(BaseModel):
+class RecordInfoResponse(BaseModel):
     id: str
     note: str
     amount: float
