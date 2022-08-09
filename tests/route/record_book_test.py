@@ -3,9 +3,10 @@ import uuid
 
 import pytest
 
+from src.model.record_book import RecordBook
 from src.model.record_type import RecordType
-from src.service.record_book import RecordBookService
 from src.model.user import User
+from src.service.record_book import RecordBookService
 from src.service.user import UserService
 
 USER_ID = str(uuid.uuid4())
@@ -37,7 +38,7 @@ def default_record_book(get_test_session):
         record_book_service.create_record(username=user.username, record_book_id=record_book.id,
                                           note="Test Expense", amount=10, record_type=RecordType.EXPENSE,
                                           tags=['test'])
-        return record_book
+        return record_book_service.fetch_record_book(record_book_id=record_book.id, username=USERNAME)
 
 
 def test_should_create_record_book(client):
@@ -84,3 +85,10 @@ def test_should_fetch_record_book_with_records_for_user_given_user_id(client, de
     assert data["id"] == default_record_book.id
     assert data["tags"] == ['test']
     assert len(data["records"]) == 1
+
+
+def test_should_delete_record_given_record_book_id_and_record_id(client, default_record_book: RecordBook):
+    response = client.delete(f"/record_books/{default_record_book.id}/records/{default_record_book.records()[0].id}",
+                             headers={'x-api-token': get_auth_token(client)})
+
+    assert response.status_code == 204

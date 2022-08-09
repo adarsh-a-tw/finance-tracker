@@ -77,3 +77,16 @@ def fetch_record_book(
                                       added_at=r.added_at,
                                       tags=r.tags
                                   ), record_book.records())))
+
+
+@router.delete("/{record_book_id}/records/{record_id}", status_code=204)
+def delete_record(
+        record_book_id: str = Path(title="The ID of the Record Book"),
+        record_id: str = Path(title="The ID of the Record Book"),
+        session_class: Session = Depends(get_session),
+        user_info: dict = Depends(verify_auth)
+):
+    with session_class.begin() as session:
+        record_book_service = RecordBookService(session)
+        record_book_service.delete_record(record_book_id=record_book_id, username=user_info['username'],
+                                          record_id=record_id)

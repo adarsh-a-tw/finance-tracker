@@ -50,3 +50,8 @@ class RecordBookService:  # pylint: disable=too-few-public-methods
         data_record_books = self.repository.fetch_record_books(user.id)
         return [ModelRecordBook.from_data_model(data_record_book, with_records=True) for data_record_book in
                 data_record_books]
+
+    def delete_record(self, record_book_id, username, record_id):
+        record_book = self.fetch_record_book(record_book_id, username)
+        record_book.delete(record_id)
+        self.repository.update_record_book(record_book.data_model())
