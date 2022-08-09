@@ -35,13 +35,12 @@ def test_should_fetch_record_book():
 
 def test_should_update_record_book():
     table_record_book = mock_data_record_book()
-    new_balance = 100
     mocked_session_class = MagicMock(spec=Session)
     mocked_engine = MagicMock()
 
     with mocked_session_class(mocked_engine) as session:
         repository: RecordBookRepository = RecordBookRepository(db_session=session)
-        updated_record_book = repository.update_record_book(table_record_book)
+        repository.update_record_book(table_record_book)
         session.merge.assert_called_once()
 
 
@@ -57,3 +56,14 @@ def test_should_fetch_record_books():
         record_books = repository.fetch_record_books(user_id)
         session.scalars().all.assert_called_once()
         assert record_books == table_record_books
+
+
+def test_should_delete_record_book():
+    table_record_book = mock_data_record_book()
+    mocked_session_class = MagicMock(spec=Session)
+    mocked_engine = MagicMock()
+
+    with mocked_session_class(mocked_engine) as session:
+        repository: RecordBookRepository = RecordBookRepository(db_session=session)
+        repository.delete_record_book(table_record_book)
+        session.delete.assert_called_once_with(table_record_book)

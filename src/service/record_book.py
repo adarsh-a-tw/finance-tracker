@@ -35,18 +35,14 @@ class RecordBookService:  # pylint: disable=too-few-public-methods
         return model_record
 
     def fetch_record_book(self, record_book_id: str, username: str) -> ModelRecordBook:
-        user: ModelUser = self.user_service.fetch_user(username)
-        if not user:
-            raise UserNotFoundException
+        user = self._fetch_user(username)
         data_record_book = self.repository.fetch_record_book(record_book_id, user.id)
         if data_record_book:
             return ModelRecordBook.from_data_model(data_record_book, with_records=True)
         raise RecordBookNotFoundException
 
     def fetch_record_books(self, username):
-        user: ModelUser = self.user_service.fetch_user(username)
-        if not user:
-            raise UserNotFoundException
+        user = self._fetch_user(username)
         data_record_books = self.repository.fetch_record_books(user.id)
         return [ModelRecordBook.from_data_model(data_record_book, with_records=True) for data_record_book in
                 data_record_books]
@@ -55,3 +51,17 @@ class RecordBookService:  # pylint: disable=too-few-public-methods
         record_book = self.fetch_record_book(record_book_id, username)
         record_book.delete(record_id)
         self.repository.update_record_book(record_book.data_model())
+
+    def delete_record_book(self, record_book_id, username):
+        try:
+            user = self._fetch_user(username)
+            record_book = self.repository.fetch_record_book(record_book_id, user.id)
+            self.repository.delete_record_book(record_book)
+        except RecordBookNotFoundException:
+            pass
+
+    def _fetch_user(self, username):
+        user: ModelUser = self.user_service.fetch_user(username)
+        if not user:
+            raise UserNotFoundException
+        return user

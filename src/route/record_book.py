@@ -90,3 +90,14 @@ def delete_record(
         record_book_service = RecordBookService(session)
         record_book_service.delete_record(record_book_id=record_book_id, username=user_info['username'],
                                           record_id=record_id)
+
+
+@router.delete("/{record_book_id}", status_code=204)
+def delete_record(
+        record_book_id: str = Path(title="The ID of the Record Book"),
+        session_class: Session = Depends(get_session),
+        user_info: dict = Depends(verify_auth)
+):
+    with session_class.begin() as session:
+        record_book_service = RecordBookService(session)
+        record_book_service.delete_record_book(record_book_id=record_book_id, username=user_info['username'])

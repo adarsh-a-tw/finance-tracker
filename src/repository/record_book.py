@@ -23,3 +23,6 @@ class RecordBookRepository:  # pylint: disable=too-few-public-methods
         statement = select(RecordBook).filter_by(user_id=user_id)
         data_record_books = self._session.scalars(statement=statement).all()
         return data_record_books
+
+    def delete_record_book(self, record_book):
+        self._session.delete(record_book)

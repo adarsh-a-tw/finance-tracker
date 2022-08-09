@@ -92,3 +92,10 @@ def test_should_delete_record_given_record_book_id_and_record_id(client, default
                              headers={'x-api-token': get_auth_token(client)})
 
     assert response.status_code == 204
+
+
+def test_should_delete_record_book_given_record_book_id(client, default_record_book: RecordBook):
+    response = client.delete(f"/record_books/{default_record_book.id}",
+                             headers={'x-api-token': get_auth_token(client)})
+
+    assert response.status_code == 204
