@@ -36,6 +36,12 @@ class RecordBook:  # pylint: disable=invalid-name
         self._update_balance(record)
         return record_id
 
+    def delete(self, record_id):
+        record: Record = self.get(record_id)
+        if record:
+            self._records.pop(record_id)
+            self._restore_balance(record)
+
     def get(self, record_id):
         return self._records.get(record_id)
 
@@ -51,6 +57,12 @@ class RecordBook:  # pylint: disable=invalid-name
         else:
             self._net_balance += record.amount
 
+    def _restore_balance(self, record: Record):
+        if record.type == RecordType.EXPENSE:
+            self._net_balance += record.amount
+        else:
+            self._net_balance -= record.amount
+
     def tags(self):
         return self._tags
 
@@ -60,6 +72,9 @@ class RecordBook:  # pylint: disable=invalid-name
     def data_model(self) -> tables.RecordBook:
         data_record_book = tables.RecordBook(id=self.id, name=self.name, user_id=self.user.id,
                                              net_balance=self.net_balance())
+        for record in self.records():
+            data_record = record.data_model(record_book_id=self.id)
+            data_record_book.records.append(data_record)
         for tag in self._tags:
             data_record_book.tag_map.append(tables.RecordBookTagMapping(record_book_id=data_record_book.id, tag=tag))
         return data_record_book

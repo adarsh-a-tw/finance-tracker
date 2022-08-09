@@ -187,3 +187,18 @@ def test_fetch_records_from_record_book():
 
     assert len(records) == 3
     assert records[0].note == note
+
+
+def test_should_delete_record_from_record_book():
+    user = User(str(uuid.uuid4()), "test_username", "user_email@domain.com")
+    record_book = RecordBook(str(uuid.uuid4()), "Test Book", user)
+    note = "Test Expense"
+    amount = 10
+    record_id = record_book.add(note, amount, RecordType.EXPENSE)
+    record_book.add(note, amount, RecordType.EXPENSE)
+    record_book.add(note, amount, RecordType.EXPENSE)
+
+    record_book.delete(record_id=record_id)
+
+    assert record_book.get(record_id) is None
+    assert record_book.net_balance() == -20

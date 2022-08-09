@@ -5,18 +5,16 @@ from unittest.mock import MagicMock, patch
 import pytest
 from sqlalchemy.orm import Session
 
+import tables
 from mocks.record_book import mock_model_record_book, mock_data_record_book
 from mocks.user import mock_model_user
 from src.exceptions import UserNotFoundException, RecordBookNotFoundException
-from src.repository.record import RecordRepository
-from src.model.record_type import RecordType
-from src.model.record_book import RecordBook as ModelRecordBook
 from src.model.record import Record as ModelRecord
+from src.model.record_book import RecordBook as ModelRecordBook
+from src.model.record_type import RecordType
 from src.repository.record_book import RecordBookRepository
 from src.repository.user import UserRepository
 from src.service.record_book import RecordBookService
-
-import tables
 
 
 @patch('src.service.record_book.UserService')
@@ -45,8 +43,7 @@ def test_should_create_record_book_given_name_and_user(mocked_record_book_reposi
 
 @patch('src.service.record_book.UserService')
 @patch('src.service.record_book.RecordBookRepository')
-@patch('src.service.record_book.RecordRepository')
-def test_should_create_record_given_record_book_id_and_username(mocked_record_repository, mocked_record_book_repository,
+def test_should_create_record_given_record_book_id_and_username(mocked_record_book_repository,
                                                                 mocked_user_service):
     record_book_id = mock_model_record_book().id
     username = mock_model_user().username
@@ -63,9 +60,6 @@ def test_should_create_record_given_record_book_id_and_username(mocked_record_re
     mocked_record_book_repository_instance.fetch_record_book.return_value = mock_data_record_book()
     mocked_record_book_repository.return_value = mocked_record_book_repository_instance
 
-    mocked_record_repository_instance = MagicMock(spec=RecordRepository)
-    mocked_record_repository.return_value = mocked_record_repository_instance
-
     mocked_session_class = MagicMock(spec=Session)
     mocked_engine = MagicMock()
 
@@ -76,17 +70,14 @@ def test_should_create_record_given_record_book_id_and_username(mocked_record_re
         mocked_user_service_instance.fetch_user.assert_called_with(username)
         mocked_record_book_repository_instance.fetch_record_book.assert_called_with(record_book_id,
                                                                                     mock_model_user().id)
-        mocked_record_repository_instance.save.assert_called_once()
-        mocked_record_book_repository_instance.update_net_balance_and_tags.assert_called_once()
+        mocked_record_book_repository_instance.update_record_book.assert_called_once()
 
     assert isinstance(record, ModelRecord)
 
 
 @patch('src.service.record_book.UserService')
 @patch('src.service.record_book.RecordBookRepository')
-@patch('src.service.record_book.RecordRepository')
-def test_should_raise_record_book_not_found_exception_given_invalid_record_book_id(mocked_record_repository,
-                                                                                   mocked_record_book_repository,
+def test_should_raise_record_book_not_found_exception_given_invalid_record_book_id(mocked_record_book_repository,
                                                                                    mocked_user_service):
     record_book_id = mock_model_record_book().id
     username = mock_model_user().username
@@ -102,9 +93,6 @@ def test_should_raise_record_book_not_found_exception_given_invalid_record_book_
     mocked_record_book_repository_instance = MagicMock(spec=RecordBookRepository)
     mocked_record_book_repository_instance.fetch_record_book.return_value = None
     mocked_record_book_repository.return_value = mocked_record_book_repository_instance
-
-    mocked_record_repository_instance = MagicMock(spec=RecordRepository)
-    mocked_record_repository.return_value = mocked_record_repository_instance
 
     mocked_session_class = MagicMock(spec=Session)
     mocked_engine = MagicMock()

@@ -6,7 +6,6 @@ from src.model.record import Record as ModelRecord
 from src.model.record_book import RecordBook as ModelRecordBook
 from src.model.record_type import RecordType
 from src.model.user import User as ModelUser
-from src.repository.record import RecordRepository
 from src.repository.record_book import RecordBookRepository
 from src.service.user import UserService
 
@@ -15,7 +14,6 @@ class RecordBookService:  # pylint: disable=too-few-public-methods
     def __init__(self, db_session):
         self.repository: RecordBookRepository = RecordBookRepository(db_session=db_session)
         self.user_service: UserService = UserService(db_session=db_session)
-        self.record_repository: RecordRepository = RecordRepository(db_session=db_session)
 
     def create_record_book(self, name: str, username: str) -> ModelRecordBook:
         user: ModelUser = self.user_service.fetch_user(username)
@@ -33,9 +31,7 @@ class RecordBookService:  # pylint: disable=too-few-public-methods
         record_book = self.fetch_record_book(record_book_id, username)
         record_id = record_book.add(note, amount, record_type, tags)
         model_record: ModelRecord = record_book.get(record_id)
-        self.record_repository.save(model_record.data_model(record_book.id))
-        self.repository.update_net_balance_and_tags(record_book_id, record_book.net_balance(),
-                                                    record_book.data_model().tag_map)
+        self.repository.update_record_book(record_book.data_model())
         return model_record
 
     def fetch_record_book(self, record_book_id: str, username: str) -> ModelRecordBook:

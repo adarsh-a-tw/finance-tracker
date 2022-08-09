@@ -25,7 +25,7 @@ class RecordBook(Base):  # pylint: disable=too-few-public-methods
     name = Column(String(50), nullable=False)
     user_id = Column(String(50), ForeignKey('user.id'), nullable=False)
     user = relationship('User', back_populates="record_books")
-    records = relationship("Record", back_populates="record_book")
+    records = relationship("Record", back_populates="record_book", cascade="all, delete-orphan")
     net_balance = Column(Float(), default=0)
     tag_map = relationship("RecordBookTagMapping", cascade="all, delete-orphan")
 
