@@ -1,5 +1,6 @@
 import uvicorn
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from src.exceptions import InvalidCredentialsException, InvalidAuthTokenException, PasswordsDontMatchException, \
@@ -8,6 +9,18 @@ from src.route.record_book import router as record_book_router
 from src.route.user import router as user_router
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(router=user_router, prefix='/users')
 app.include_router(router=record_book_router, prefix='/record_books')
