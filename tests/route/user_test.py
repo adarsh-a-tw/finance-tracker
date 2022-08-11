@@ -21,6 +21,7 @@ def test_authenticate_success(client):
     response = client.post("/users/authenticate", json={"username": "test_user", "password": "test_password"})
     assert response.status_code == 200
     assert 'token' in response.json()
+    assert 'refresh_token' in response.json()
 
 
 def test_authenticate_failure_invalid_username(client):
@@ -77,3 +78,13 @@ def test_user_signup_failure_when_passwords_dont_match(client):
     response = client.post("/users/signup", json=user_information)
     assert response.status_code == 400
     assert response.json()['message'] == 'Passwords dont match.'
+
+
+def test_authenticate_using_refresh_token(client):
+    auth_response = client.post("/users/authenticate", json={"username": "test_user", "password": "test_password"})
+    refresh_token = auth_response.json()['refresh_token']
+    response = client.post("/users/refresh_token", json={"refresh_token": refresh_token})
+    assert response.status_code == 200
+    data = response.json()
+    assert data['token'] is not None
+    assert data['refresh_token'] is not None

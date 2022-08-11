@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from sqlalchemy.orm import Session
 
-import tables
+
 from mocks.record_book import mock_model_record_book, mock_data_record_book
 from mocks.user import mock_model_user
 from src.exceptions import UserNotFoundException, RecordBookNotFoundException
@@ -15,6 +15,8 @@ from src.model.record_type import RecordType
 from src.repository.record_book import RecordBookRepository
 from src.repository.user import UserRepository
 from src.service.record_book import RecordBookService
+
+import tables
 
 
 @patch('src.service.record_book.UserService')

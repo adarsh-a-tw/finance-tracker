@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Body
 from sqlalchemy.orm import Session
 
 from dependencies import get_session, verify_auth
@@ -14,10 +14,24 @@ def authenticate(request_body: AuthenticateRequest, session_class: Session = Dep
     username, password = request_body.username, request_body.password
     with session_class.begin() as session:
         service = UserService(session)
-        token = service.authenticate(username, password)
+        token, refresh_token = service.authenticate(username, password)
 
     return {
-        "token": token
+        "token": token,
+        "refresh_token": refresh_token
+    }
+
+
+@router.post("/refresh_token")
+def refresh_token_pair(request_body: dict = Body(), session_class: Session = Depends(get_session)):
+    refresh_token = request_body['refresh_token']
+    with session_class.begin() as session:
+        service = UserService(session)
+        token, refresh_token = service.get_token_pair(refresh_token)
+
+    return {
+        "token": token,
+        "refresh_token": refresh_token
     }
 
 

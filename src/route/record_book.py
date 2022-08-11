@@ -82,7 +82,7 @@ def fetch_record_book(
 @router.delete("/{record_book_id}/records/{record_id}", status_code=204)
 def delete_record(
         record_book_id: str = Path(title="The ID of the Record Book"),
-        record_id: str = Path(title="The ID of the Record Book"),
+        record_id: str = Path(title="The ID of the Record"),
         session_class: Session = Depends(get_session),
         user_info: dict = Depends(verify_auth)
 ):
@@ -93,7 +93,7 @@ def delete_record(
 
 
 @router.delete("/{record_book_id}", status_code=204)
-def delete_record(
+def delete_record_book(
         record_book_id: str = Path(title="The ID of the Record Book"),
         session_class: Session = Depends(get_session),
         user_info: dict = Depends(verify_auth)
